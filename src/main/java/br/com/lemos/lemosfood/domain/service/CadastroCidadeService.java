@@ -4,28 +4,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
-import br.com.lemos.lemosfood.domain.model.Cozinha;
-import br.com.lemos.lemosfood.domain.model.Restaurante;
-import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
-import br.com.lemos.lemosfood.domain.repository.RestauranteRepository;
+import br.com.lemos.lemosfood.domain.model.Cidade;
+import br.com.lemos.lemosfood.domain.model.Estado;
+import br.com.lemos.lemosfood.domain.repository.CidadeRepository;
+import br.com.lemos.lemosfood.domain.repository.EstadoRepository;
 
 @Service
-public class CadastroRestauranteService {
+public class CadastroCidadeService {
 	
 	@Autowired
-	private RestauranteRepository restauranteRepository;
+	private CidadeRepository cidadeRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private EstadoRepository estadoRepository;
 	
-	public Restaurante salvar(Restaurante restaurante) {
-		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+	public Cidade salvar(Cidade cidade) {
+		Long estadoId = cidade.getEstado().getId();
+		Estado estado = estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe cadastro de estado com código %d", estadoId)));
 		
-		restaurante.setCozinha(cozinha);
-		return restauranteRepository.save(restaurante);
+		cidade.setEstado(estado);
+		return cidadeRepository.save(cidade);
 	}
 	
 //	public void excluir(Long restauranteId) {

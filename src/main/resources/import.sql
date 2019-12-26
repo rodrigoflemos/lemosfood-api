@@ -16,8 +16,11 @@ insert into permissao (nome) VALUES ('Gravar');
 
 insert into estado (id, nome) VALUES (1, 'São Paulo');
 insert into estado (id, nome) VALUES (2, 'Rio de Janeiro');
+insert into estado (id, nome) VALUES (3, 'Minas Gerais');
 
 insert into cidade (nome, estado_id) VALUES ('São Paulo',1);
 insert into cidade (nome, estado_id) VALUES ('Campinas',1);
 insert into cidade (nome, estado_id) VALUES ('Rio de Janeiro',2);
 insert into cidade (nome, estado_id) VALUES ('Niterói',2);
+insert into cidade (nome, estado_id) VALUES ('Ouro Preto',3);
+insert into cidade (nome, estado_id) VALUES ('Tiradentes',3);
