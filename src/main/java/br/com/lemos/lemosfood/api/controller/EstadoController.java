@@ -1,12 +1,10 @@
 package br.com.lemos.lemosfood.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lemos.lemosfood.domain.exception.EntidadeEmUsoException;
-import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.model.Estado;
 import br.com.lemos.lemosfood.domain.repository.EstadoRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroEstadoService;
@@ -29,42 +25,40 @@ public class EstadoController {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
-
-	@Autowired CadastroEstadoService cadastroEstado;
+	
+	@Autowired
+	private CadastroEstadoService cadastroEstado;
 	
 	@GetMapping
-	public List<Estado> listar(){
+	public List<Estado> listar() {
 		return estadoRepository.findAll();
 	}
 	
+	@GetMapping("/{estadoId}")
+	public Estado buscar(@PathVariable Long estadoId) {
+		return cadastroEstado.buscarOuFalhar(estadoId);
+	}
+	
 	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.CREATED)
 	public Estado adicionar(@RequestBody Estado estado) {
 		return cadastroEstado.salvar(estado);
 	}
 	
 	@PutMapping("/{estadoId}")
-	public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado){
+	public Estado atualizar(@PathVariable Long estadoId,
+			@RequestBody Estado estado) {
+		Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 		
-		Optional<Estado> estadoAtual = estadoRepository.findById(estadoId);
+		BeanUtils.copyProperties(estado, estadoAtual, "id");
 		
-		if(estadoAtual.isPresent()) {
-			BeanUtils.copyProperties(estado, estadoAtual.get(), "id");
-			Estado estadoSalvo = cadastroEstado.salvar(estadoAtual.get());
-			return ResponseEntity.ok(estadoSalvo);
-		}
-		return ResponseEntity.notFound().build();
+		return cadastroEstado.salvar(estadoAtual);
 	}
 	
 	@DeleteMapping("/{estadoId}")
-	public ResponseEntity<?> remover (@PathVariable Long estadoId){
-		try {
-			cadastroEstado.excluir(estadoId);
-			return ResponseEntity.noContent().build();
-		}catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long estadoId) {
+		cadastroEstado.excluir(estadoId);	
 	}
+	
 }
