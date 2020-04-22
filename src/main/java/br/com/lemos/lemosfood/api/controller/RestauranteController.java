@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import br.com.lemos.lemosfood.api.assembler.RestauranteInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.RestauranteModelAssembler;
 import br.com.lemos.lemosfood.api.model.RestauranteModel;
 import br.com.lemos.lemosfood.api.model.input.RestauranteInput;
+import br.com.lemos.lemosfood.domain.exception.CidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
@@ -60,7 +62,7 @@ public class RestauranteController {
 			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
 			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -74,8 +76,22 @@ public class RestauranteController {
 			restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
 			return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
-		} catch (CozinhaNaoEncontradaException e) {
+		} catch (CozinhaNaoEncontradaException  | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
+	}
+	
+	//PUT /restaurantes/{id}/ativo
+	@PutMapping("/{restauranteId}/ativo")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void ativar(@PathVariable Long restauranteId) {
+		cadastroRestaurante.ativar(restauranteId);
+	}
+	
+	//DELETE /restaurantes/{id}/ativo
+	@DeleteMapping("/{restauranteId}/ativo")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void inativar(@PathVariable Long restauranteId) {
+		cadastroRestaurante.inativar(restauranteId);
 	}
 }
