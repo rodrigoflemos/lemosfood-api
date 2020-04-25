@@ -1,5 +1,7 @@
 package br.com.lemos.lemosfood.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,24 @@ public class CadastroUsuarioService {
     
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        
+    	/*
+    	 * Incluido para desacoplar o objeto gerenciado, senao da problema no findByEmail:
+    	 * 		Com o usuario acoplado, o contexto JPA atualiza esse objeto, e com isso temos 2 objetos com o mesmo email,
+    	 * 		o que nao pode ocorrer.
+    	 * 		Para testar, apagar essa linha e tentar atualizar um usuario com um email ja existente
+    	 */
+    	usuarioRepository.detach(usuario);
+    	
+    	Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+    	
+    	if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+    		throw new NegocioException(
+    				String.format("Já existe um cadastro de usuario com esse e-mail: %s", usuario.getEmail()));
+    		
+    	}
+    			
+    	return usuarioRepository.save(usuario);
     }
     
     @Transactional
