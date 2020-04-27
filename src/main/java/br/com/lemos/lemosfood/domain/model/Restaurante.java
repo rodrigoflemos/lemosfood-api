@@ -3,7 +3,9 @@ package br.com.lemos.lemosfood.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -64,10 +66,10 @@ public class Restaurante {
 	@JoinTable(name = "restaurante_forma_pagamento",
 			joinColumns = @JoinColumn(name = "restaurante_id"),
 			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
+	private Set<FormaPagamento> formasPagamento = new HashSet<>();
 	
 	@OneToMany(mappedBy = "restaurante")
-	private List<Produto> produtos = new ArrayList<>();
+	private Set<Produto> produtos = new HashSet<>();
 	
 	public void ativar() {
 		setAtivo(true);
@@ -77,4 +79,11 @@ public class Restaurante {
 		setAtivo(false);
 	}
 	
+	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+		return formasPagamento.add(formaPagamento);
+	}
+	
+	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+		return formasPagamento.remove(formaPagamento);
+	}
 }
