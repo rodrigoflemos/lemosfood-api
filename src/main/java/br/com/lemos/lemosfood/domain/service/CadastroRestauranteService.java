@@ -1,5 +1,7 @@
 package br.com.lemos.lemosfood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +57,29 @@ public class CadastroRestauranteService {
 		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		restauranteAtual.inativar();	
 	}
+	
+	@Transactional
+	public void ativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::ativar);
+	}
 
+	@Transactional
+	public void inativar(List<Long> restauranteIds) {
+		restauranteIds.forEach(this::inativar);	
+	}
+
+	@Transactional
+	public void abrir(Long restauranteId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		restaurante.abrir();
+	}
+
+	@Transactional
+	public void fechar(Long restauranteId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		restaurante.fechar();
+	}
+	
 	@Transactional
 	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 
@@ -72,17 +96,7 @@ public class CadastroRestauranteService {
 		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
 
-	@Transactional
-	public void abrir(Long restauranteId) {
-		Restaurante restaurante = buscarOuFalhar(restauranteId);
-		restaurante.abrir();
-	}
-
-	@Transactional
-	public void fechar(Long restauranteId) {
-		Restaurante restaurante = buscarOuFalhar(restauranteId);
-		restaurante.fechar();
-	}
+	
 
 	@Transactional
 	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {

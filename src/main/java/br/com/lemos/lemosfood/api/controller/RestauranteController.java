@@ -23,6 +23,7 @@ import br.com.lemos.lemosfood.api.model.input.RestauranteInput;
 import br.com.lemos.lemosfood.domain.exception.CidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
+import br.com.lemos.lemosfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.repository.RestauranteRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
@@ -80,27 +81,47 @@ public class RestauranteController {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-	
+
 	//PUT /restaurantes/{id}/ativo
 	@PutMapping("/{restauranteId}/ativo")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void ativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.ativar(restauranteId);
 	}
-	
+
 	//DELETE /restaurantes/{id}/ativo
 	@DeleteMapping("/{restauranteId}/ativo")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void inativar(@PathVariable Long restauranteId) {
 		cadastroRestaurante.inativar(restauranteId);
 	}
+
+	@PutMapping("/ativacoes")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+		try {
+			cadastroRestaurante.ativar(restauranteIds);
+		}catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
 	
+	@DeleteMapping("/ativacoes")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+	try {	
+		cadastroRestaurante.inativar(restauranteIds);
+	}catch (RestauranteNaoEncontradoException e) {
+		throw new NegocioException(e.getMessage());
+	}
+	}
+
 	@PutMapping("/{restauranteId}/abertura")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void abrir(@PathVariable Long restauranteId) {
 		cadastroRestaurante.abrir(restauranteId);
 	}
-	
+
 	@PutMapping("/{restauranteId}/fechamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void fechar(@PathVariable Long restauranteId) {
