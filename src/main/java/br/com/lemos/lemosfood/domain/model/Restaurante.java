@@ -2,9 +2,7 @@ package br.com.lemos.lemosfood.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -53,6 +51,8 @@ public class Restaurante {
 	private Endereco endereco;
 	
 	private Boolean ativo = Boolean.TRUE;
+	
+	private Boolean aberto = Boolean.FALSE;
 			
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -86,4 +86,14 @@ public class Restaurante {
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
 		return formasPagamento.remove(formaPagamento);
 	}
+	
+	public void abrir() {
+		setAberto(true);
+	}
+	
+	public void fechar() {
+		setAberto(false);
+	}
+	
+	
 }
