@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.lemos.lemosfood.domain.exception.EntidadeEmUsoException;
 import br.com.lemos.lemosfood.domain.exception.GrupoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.model.Grupo;
+import br.com.lemos.lemosfood.domain.model.Permissao;
 import br.com.lemos.lemosfood.domain.repository.GrupoRepository;
 
 @Service
@@ -21,6 +22,9 @@ public class CadastroGrupoService {
     
     @Autowired
     private GrupoRepository grupoRepository;
+    
+    @Autowired
+    private CadastroPermissaoService cadastroPermissao;
     
     @Transactional
     public Grupo salvar(Grupo grupo) {
@@ -49,5 +53,19 @@ public class CadastroGrupoService {
 
 	public List<Grupo> listar() {
 		return grupoRepository.findAll();
+	}
+	
+	@Transactional
+	public void associarPermissao(Long grupoId, Long permissaoId) {
+		Grupo grupo = buscarOuFalhar(grupoId);
+		Permissao permissao = cadastroPermissao.buscarOuFalhar(permissaoId);
+		grupo.adicionarPermissao(permissao);
+	}
+	
+	@Transactional
+	public void desassociarPermissao(Long grupoId, Long permissaoId) {
+		Grupo grupo = buscarOuFalhar(grupoId);
+		Permissao permissao = cadastroPermissao.buscarOuFalhar(permissaoId);
+		grupo.removerPermissao(permissao);
 	}
 }                     
