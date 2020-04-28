@@ -9,6 +9,7 @@ import br.com.lemos.lemosfood.domain.model.Cidade;
 import br.com.lemos.lemosfood.domain.model.Cozinha;
 import br.com.lemos.lemosfood.domain.model.FormaPagamento;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
+import br.com.lemos.lemosfood.domain.model.Usuario;
 import br.com.lemos.lemosfood.domain.repository.RestauranteRepository;
 
 @Service
@@ -25,6 +26,9 @@ public class CadastroRestauranteService {
 
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamento;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuario;
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -80,6 +84,22 @@ public class CadastroRestauranteService {
 		restaurante.fechar();
 	}
 
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+	    Restaurante restaurante = buscarOuFalhar(restauranteId);
+	    Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+	    
+	    restaurante.removerResponsavel(usuario);
+	}
+
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId) {
+	    Restaurante restaurante = buscarOuFalhar(restauranteId);
+	    Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+	    
+	    restaurante.adicionarResponsavel(usuario);
+	}
+	
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId)
 				.orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
