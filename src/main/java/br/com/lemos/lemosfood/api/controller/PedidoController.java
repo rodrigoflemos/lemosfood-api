@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lemos.lemosfood.api.assembler.PedidoModelAssembler;
+import br.com.lemos.lemosfood.api.assembler.PedidoResumoModelAssembler;
 import br.com.lemos.lemosfood.api.model.PedidoModel;
+import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
 import br.com.lemos.lemosfood.domain.model.Pedido;
 import br.com.lemos.lemosfood.domain.repository.PedidoRepository;
 import br.com.lemos.lemosfood.domain.service.EmissaoPedidoService;
@@ -27,10 +29,13 @@ public class PedidoController {
 	@Autowired
 	private PedidoModelAssembler pedidoModelAssembler;
 	
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+	
 	@GetMapping
-	public List<PedidoModel> listar(){
+	public List<PedidoResumoModel> listar(){
 		List<Pedido> todosOsPedidos = pedidoRepository.findAll();
-		return pedidoModelAssembler.toCollectionModel(todosOsPedidos);
+		return pedidoResumoModelAssembler.toCollectionModel(todosOsPedidos);
 	}
 
 	@GetMapping("/{pedidoId}")
