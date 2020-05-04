@@ -20,6 +20,6 @@ public class FluxoPedidoController {
 	@PutMapping("/confirmacao")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void confirmar(@PathVariable Long pedidoId) {
-		fluxoPedido.confirmar(pedidoId);
+		fluxoPedido.confirmar(pedidoId); 
 	}
 }
