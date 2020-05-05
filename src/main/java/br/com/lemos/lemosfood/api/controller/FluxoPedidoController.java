@@ -19,19 +19,19 @@ public class FluxoPedidoController {
 	
 	@PutMapping("/confirmacao")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void confirmar(@PathVariable Long pedidoId) {
-		fluxoPedido.confirmar(pedidoId); 
+	public void confirmar(@PathVariable String pedidoCodigo) {
+		fluxoPedido.confirmar(pedidoCodigo); 
 	}
 	
 	@PutMapping("/cancelamento")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void cancelar(@PathVariable Long pedidoId) {
-	    fluxoPedido.cancelar(pedidoId);
+	public void cancelar(@PathVariable String pedidoCodigo) {
+	    fluxoPedido.cancelar(pedidoCodigo);
 	}
 
 	@PutMapping("/entrega")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void entregar(@PathVariable Long pedidoId) {
-	    fluxoPedido.entregar(pedidoId);
+	public void entregar(@PathVariable String pedidoCodigo) {
+	    fluxoPedido.entregar(pedidoCodigo);
 	}
 }
