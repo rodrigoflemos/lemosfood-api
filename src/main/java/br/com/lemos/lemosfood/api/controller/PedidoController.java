@@ -52,29 +52,29 @@ public class PedidoController {
 	@Autowired
 	private PedidoInputDisassembler pedidoInputDisassembler;
 	
-//	@GetMapping
-//	public List<PedidoResumoModel> listar(){
-//		List<Pedido> todosOsPedidos = pedidoRepository.findAll();
-//		return pedidoResumoModelAssembler.toCollectionModel(todosOsPedidos);
-//	}
-	
 	@GetMapping
-	public MappingJacksonValue listar(@RequestParam(required = false) String campos){
-		List<Pedido> pedidos = pedidoRepository.findAll();
-		List<PedidoResumoModel> pedidosModel = pedidoResumoModelAssembler.toCollectionModel(pedidos);
-		
-		MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
-		
-		SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-		filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
-		
-		if(StringUtils.isNotBlank(campos)) {
-			filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
-		}
-		pedidosWrapper.setFilters(filterProvider);
-		
-		return pedidosWrapper;
+	public List<PedidoResumoModel> listar(){
+		List<Pedido> todosOsPedidos = pedidoRepository.findAll();
+		return pedidoResumoModelAssembler.toCollectionModel(todosOsPedidos);
 	}
+	
+//	@GetMapping
+//	public MappingJacksonValue listar(@RequestParam(required = false) String campos){
+//		List<Pedido> pedidos = pedidoRepository.findAll();
+//		List<PedidoResumoModel> pedidosModel = pedidoResumoModelAssembler.toCollectionModel(pedidos);
+//		
+//		MappingJacksonValue pedidosWrapper = new MappingJacksonValue(pedidosModel);
+//		
+//		SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+//		filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.serializeAll());
+//		
+//		if(StringUtils.isNotBlank(campos)) {
+//			filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
+//		}
+//		pedidosWrapper.setFilters(filterProvider);
+//		
+//		return pedidosWrapper;
+//	}
 
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
