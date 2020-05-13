@@ -31,7 +31,9 @@ import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Pedido;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 import br.com.lemos.lemosfood.domain.repository.PedidoRepository;
+import br.com.lemos.lemosfood.domain.repository.filter.PedidoFilter;
 import br.com.lemos.lemosfood.domain.service.EmissaoPedidoService;
+import br.com.lemos.lemosfood.infrastructure.repository.spec.PedidoSpecs;
 
 @RestController
 @RequestMapping(value = "/pedidos")
@@ -53,8 +55,8 @@ public class PedidoController {
 	private PedidoInputDisassembler pedidoInputDisassembler;
 	
 	@GetMapping
-	public List<PedidoResumoModel> listar(){
-		List<Pedido> todosOsPedidos = pedidoRepository.findAll();
+	public List<PedidoResumoModel> pesquisar(PedidoFilter filtro){
+		List<Pedido> todosOsPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 		return pedidoResumoModelAssembler.toCollectionModel(todosOsPedidos);
 	}
 	
