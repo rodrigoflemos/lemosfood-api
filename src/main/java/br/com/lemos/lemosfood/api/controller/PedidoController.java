@@ -4,21 +4,19 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 import br.com.lemos.lemosfood.api.assembler.PedidoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.PedidoModelAssembler;
@@ -41,25 +39,30 @@ public class PedidoController {
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
-	
+
 	@Autowired
 	private EmissaoPedidoService emissaoPedido;
-	
+
 	@Autowired
 	private PedidoModelAssembler pedidoModelAssembler;
-	
+
 	@Autowired
 	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
-	
+
 	@Autowired
 	private PedidoInputDisassembler pedidoInputDisassembler;
-	
+
 	@GetMapping
-	public List<PedidoResumoModel> pesquisar(PedidoFilter filtro){
-		List<Pedido> todosOsPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
-		return pedidoResumoModelAssembler.toCollectionModel(todosOsPedidos);
+	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable){
+		
+		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
+		
+		List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());
+		
+		Page<PedidoResumoModel> pedidosResumoPage = new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
+		return pedidosResumoPage;
 	}
-	
+
 //	@GetMapping
 //	public MappingJacksonValue listar(@RequestParam(required = false) String campos){
 //		List<Pedido> pedidos = pedidoRepository.findAll();
@@ -82,22 +85,22 @@ public class PedidoController {
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
 		return pedidoModelAssembler.toModel(emissaoPedido.buscarOuFalhar(codigoPedido));
 	}
-	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
-	    try {
-	        Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
+		try {
+			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-	        // TODO pegar usuário autenticado
-	        novoPedido.setCliente(new Usuario());
-	        novoPedido.getCliente().setId(1L);
+			// TODO pegar usuário autenticado
+			novoPedido.setCliente(new Usuario());
+			novoPedido.getCliente().setId(1L);
 
-	        novoPedido = emissaoPedido.emitir(novoPedido);
+			novoPedido = emissaoPedido.emitir(novoPedido);
 
-	        return pedidoModelAssembler.toModel(novoPedido);
-	    } catch (EntidadeNaoEncontradaException e) {
-	        throw new NegocioException(e.getMessage(), e);
-	    }
+			return pedidoModelAssembler.toModel(novoPedido);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
 }
