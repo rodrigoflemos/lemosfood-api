@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.ImmutableMap;
+
 import br.com.lemos.lemosfood.api.assembler.PedidoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.PedidoModelAssembler;
 import br.com.lemos.lemosfood.api.assembler.PedidoResumoModelAssembler;
 import br.com.lemos.lemosfood.api.model.PedidoModel;
 import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
 import br.com.lemos.lemosfood.api.model.input.PedidoInput;
+import br.com.lemos.lemosfood.core.data.PageableTranslator;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Pedido;
@@ -53,13 +56,17 @@ public class PedidoController {
 	private PedidoInputDisassembler pedidoInputDisassembler;
 
 	@GetMapping
-	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable){
-		
+	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+
+		pageable = traduzirPageable(pageable);
+
 		Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
-		
-		List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());
-		
-		Page<PedidoResumoModel> pedidosResumoPage = new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
+
+		List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler
+				.toCollectionModel(pedidosPage.getContent());
+
+		Page<PedidoResumoModel> pedidosResumoPage = new PageImpl<>(pedidosResumoModel, pageable,
+				pedidosPage.getTotalElements());
 		return pedidosResumoPage;
 	}
 
@@ -102,5 +109,17 @@ public class PedidoController {
 		} catch (EntidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
+	}
+
+	private Pageable traduzirPageable(Pageable pageable) {
+
+		var mapeamento = ImmutableMap.of(
+				"codigo", "codigo",
+				"restaurante.nome","restaurante.nome",
+				"nomeCliente", "cliente.nome",
+				"valorTotal", "valorTotal"
+		);
+		
+		return PageableTranslator.translate(pageable, mapeamento);
 	}
 }
