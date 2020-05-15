@@ -1,6 +1,7 @@
 package br.com.lemos.lemosfood.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.collect.ImmutableMap;
 
 import br.com.lemos.lemosfood.api.assembler.PedidoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.PedidoModelAssembler;
@@ -113,11 +112,16 @@ public class PedidoController {
 
 	private Pageable traduzirPageable(Pageable pageable) {
 
-		var mapeamento = ImmutableMap.of(
+		var mapeamento = Map.of(
 				"codigo", "codigo",
-				"restaurante.nome","restaurante.nome",
-				"nomeCliente", "cliente.nome",
-				"valorTotal", "valorTotal"
+				"subtotal", "subtotal",
+				"taxaFrete", "taxaFrete",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"restaurante.nome", "restaurante.nome",
+				"restaurante.id", "restaurante.id",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome"
 		);
 		
 		return PageableTranslator.translate(pageable, mapeamento);
