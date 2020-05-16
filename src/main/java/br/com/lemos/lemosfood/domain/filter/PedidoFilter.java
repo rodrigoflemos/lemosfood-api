@@ -1,4 +1,4 @@
-package br.com.lemos.lemosfood.domain.repository.filter;
+package br.com.lemos.lemosfood.domain.filter;
 
 import java.time.OffsetDateTime;
 

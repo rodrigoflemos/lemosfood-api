@@ -28,10 +28,10 @@ import br.com.lemos.lemosfood.api.model.input.PedidoInput;
 import br.com.lemos.lemosfood.core.data.PageableTranslator;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
+import br.com.lemos.lemosfood.domain.filter.PedidoFilter;
 import br.com.lemos.lemosfood.domain.model.Pedido;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 import br.com.lemos.lemosfood.domain.repository.PedidoRepository;
-import br.com.lemos.lemosfood.domain.repository.filter.PedidoFilter;
 import br.com.lemos.lemosfood.domain.service.EmissaoPedidoService;
 import br.com.lemos.lemosfood.infrastructure.repository.spec.PedidoSpecs;
 
