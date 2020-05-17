@@ -1,4 +1,4 @@
-package br.com.lemos.lemosfood.infrastructure.service;
+package br.com.lemos.lemosfood.infrastructure.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;
