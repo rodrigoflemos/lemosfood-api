@@ -12,7 +12,7 @@ import org.springframework.util.FileCopyUtils;
 import br.com.lemos.lemosfood.core.storage.StorageProperties;
 import br.com.lemos.lemosfood.domain.service.FotoStorageService;
 
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService{
 
 	@Autowired
