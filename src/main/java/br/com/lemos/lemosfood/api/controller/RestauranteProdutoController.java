@@ -53,12 +53,11 @@ public class RestauranteProdutoController {
         
         List<Produto> todosProdutos = null;
         
-        if(incluirInativos) {
-        	todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
-        }
-        else {
-        	todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);	
-        }
+		if (incluirInativos) {
+			todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+		} else {
+			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+		}
         
         
         return produtoModelAssembler.toCollectionModel(todosProdutos);

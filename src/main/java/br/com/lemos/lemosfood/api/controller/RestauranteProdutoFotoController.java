@@ -1,7 +1,6 @@
 package br.com.lemos.lemosfood.api.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.net.HttpHeaders;
+
 import br.com.lemos.lemosfood.api.assembler.FotoProdutoModelAssembler;
 import br.com.lemos.lemosfood.api.model.FotoProdutoModel;
 import br.com.lemos.lemosfood.api.model.input.FotoProdutoInput;
@@ -31,6 +32,7 @@ import br.com.lemos.lemosfood.domain.model.Produto;
 import br.com.lemos.lemosfood.domain.service.CadastroProdutoService;
 import br.com.lemos.lemosfood.domain.service.CatalogoFotoProdutoService;
 import br.com.lemos.lemosfood.domain.service.FotoStorageService;
+import br.com.lemos.lemosfood.domain.service.FotoStorageService.FotoRecuperada;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -81,7 +83,7 @@ public class RestauranteProdutoFotoController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<InputStreamResource> servir(@PathVariable Long restauranteId, 
+	public ResponseEntity<?> servir(@PathVariable Long restauranteId, 
 	        @PathVariable Long produtoId,  @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
 		
 		try {
@@ -92,10 +94,17 @@ public class RestauranteProdutoFotoController {
 			
 			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);
 			
-			InputStream inputStream = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
-			return ResponseEntity.ok()
-					.contentType(mediaTypeFoto)
-					.body(new InputStreamResource(inputStream));
+			FotoRecuperada fotoRecuperada = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
+			
+			if (fotoRecuperada.temUrl()) {
+				return ResponseEntity
+						.status(HttpStatus.FOUND)
+						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+						.build();
+			} else {
+				return ResponseEntity.ok().contentType(mediaTypeFoto)
+						.body(new InputStreamResource(fotoRecuperada.getInputStream()));
+			}	
 		}catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build(); 
 		}
