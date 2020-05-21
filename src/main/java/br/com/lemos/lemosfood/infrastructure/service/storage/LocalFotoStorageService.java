@@ -1,7 +1,6 @@
 package br.com.lemos.lemosfood.infrastructure.service.storage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,7 +10,6 @@ import org.springframework.util.FileCopyUtils;
 import br.com.lemos.lemosfood.core.storage.StorageProperties;
 import br.com.lemos.lemosfood.domain.service.FotoStorageService;
 
-//@Service
 public class LocalFotoStorageService implements FotoStorageService{
 
 	@Autowired
