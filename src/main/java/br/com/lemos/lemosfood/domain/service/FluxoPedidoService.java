@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.lemos.lemosfood.domain.model.Pedido;
-import br.com.lemos.lemosfood.domain.service.EnvioEmailService.Mensagem;
+import br.com.lemos.lemosfood.domain.repository.PedidoRepository;
 
 @Service
 public class FluxoPedidoService {
@@ -13,23 +13,22 @@ public class FluxoPedidoService {
 	@Autowired
 	private EmissaoPedidoService emissaoPedido;
 	
+	/*
+	 * Para o disparo do evento, é necessário chamar o save do repository,
+	 * mesmo com o objeto sendo gerenciado pelo EntityManager.
+	 * 
+	 * Como o RegisterEvent é parte do Spring Data, o funcionamento está atrelado ao save()
+	 *
+	 * 
+	 */
 	@Autowired
-	private EnvioEmailService envioEmail;
-	
+	private PedidoRepository pedidoRepository;
+		
 	@Transactional
 	public void confirmar(String codigoPedido) {
-		
 		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
 		pedido.confirmar();
-		
-		var mensagem = Mensagem.builder()
-				.assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
-				.corpo("pedido-confirmado.html")
-				.variavel("pedido", pedido)
-				.destinatario(pedido.getCliente().getEmail())
-				.build();
-		
-		envioEmail.enviar(mensagem);
+		pedidoRepository.save(pedido);
 	}
 	
 	@Transactional
