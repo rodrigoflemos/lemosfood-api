@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import br.com.lemos.lemosfood.domain.service.EnvioEmailService;
 import br.com.lemos.lemosfood.infrastructure.service.email.FakeEnvioEmailService;
+import br.com.lemos.lemosfood.infrastructure.service.email.SandboxEnvioEmailService;
 import br.com.lemos.lemosfood.infrastructure.service.email.SmtpEnvioEmailService;
 
 @Configuration
@@ -22,6 +23,8 @@ public class EmailConfig {
                 return new FakeEnvioEmailService();
             case SMTP:
                 return new SmtpEnvioEmailService();
+            case SANDBOX:
+                return new SandboxEnvioEmailService();
             default:
                 return null;
         }
