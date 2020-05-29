@@ -32,7 +32,7 @@ import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.repository.RestauranteRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
-@CrossOrigin
+@CrossOrigin(maxAge = 10)
 @RestController
 @RequestMapping(value = "/restaurantes")
 public class RestauranteController {
