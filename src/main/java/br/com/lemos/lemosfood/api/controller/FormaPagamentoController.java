@@ -1,5 +1,6 @@
 package br.com.lemos.lemosfood.api.controller;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 import br.com.lemos.lemosfood.api.assembler.FormaPagamentoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.FormaPagamentoModelAssembler;
@@ -44,7 +47,22 @@ public class FormaPagamentoController {
     private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
     
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoModel>> listar() {
+    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+    	
+    	//Desabilitar Shallow Etag, senao da problema ao implementar o Deep Etag
+    	ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
+    	
+    	String eTag = "0";
+    	
+    	OffsetDateTime dataUltimaAtualizacao = formaPagamentoRepository.getUDataUltimaAtualizacao();
+    	
+    	if(dataUltimaAtualizacao != null)
+    		eTag = String.valueOf(dataUltimaAtualizacao.toEpochSecond());
+    	
+    	if (request.checkNotModified(eTag)) {
+    		return null;
+    	}
+    	
         List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
         
         List<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler.toCollectionModel(todasFormasPagamentos);
@@ -55,6 +73,7 @@ public class FormaPagamentoController {
         		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
 //        		.cacheControl(CacheControl.noCache())
 //        		.cacheControl(CacheControl.noStore())
+        		.eTag(eTag)
         		.body(formasPagamentoModel);
     }
     
