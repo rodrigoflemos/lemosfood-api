@@ -25,7 +25,9 @@ import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Cidade;
 import br.com.lemos.lemosfood.domain.repository.CidadeRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroCidadeService;
+import io.swagger.annotations.Api;
 
+@Api(tags = "Cidades")
 @RestController
 @RequestMapping(value = "/cidades")
 public class CidadeController {
