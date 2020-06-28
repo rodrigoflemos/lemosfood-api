@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +21,14 @@ import br.com.lemos.lemosfood.api.assembler.EstadoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.EstadoModelAssembler;
 import br.com.lemos.lemosfood.api.model.EstadoModel;
 import br.com.lemos.lemosfood.api.model.input.EstadoInput;
+import br.com.lemos.lemosfood.api.openapi.controller.EstadoControllerOpenApi;
 import br.com.lemos.lemosfood.domain.model.Estado;
 import br.com.lemos.lemosfood.domain.repository.EstadoRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroEstadoService;
 
 @RestController
-@RequestMapping("/estados")
-public class EstadoController {
+@RequestMapping(path = "/estados", produces = MediaType.APPLICATION_JSON_VALUE)
+public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
