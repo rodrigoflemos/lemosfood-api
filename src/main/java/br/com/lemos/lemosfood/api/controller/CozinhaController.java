@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +24,14 @@ import br.com.lemos.lemosfood.api.assembler.CozinhaInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.CozinhaModelAssembler;
 import br.com.lemos.lemosfood.api.model.CozinhaModel;
 import br.com.lemos.lemosfood.api.model.input.CozinhaInput;
+import br.com.lemos.lemosfood.api.openapi.controller.CozinhaControllerOpenApi;
 import br.com.lemos.lemosfood.domain.model.Cozinha;
 import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroCozinhaService;
 
 @RestController
-@RequestMapping("/cozinhas")
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CozinhaController implements CozinhaControllerOpenApi {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
