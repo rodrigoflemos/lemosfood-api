@@ -1,4 +1,4 @@
-package br.com.lemos.lemosfood.api.controller.openapi;
+package br.com.lemos.lemosfood.api.openapi.controller;
 
 import java.util.List;
 

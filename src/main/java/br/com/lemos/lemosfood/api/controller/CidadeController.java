@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lemos.lemosfood.api.assembler.CidadeInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.CidadeModelAssembler;
-import br.com.lemos.lemosfood.api.controller.openapi.CidadeControllerOpenApi;
 import br.com.lemos.lemosfood.api.model.CidadeModel;
 import br.com.lemos.lemosfood.api.model.input.CidadeInput;
+import br.com.lemos.lemosfood.api.openapi.controller.CidadeControllerOpenApi;
 import br.com.lemos.lemosfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Cidade;

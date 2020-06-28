@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lemos.lemosfood.api.assembler.GrupoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.GrupoModelAssembler;
-import br.com.lemos.lemosfood.api.controller.openapi.GrupoControllerOpenApi;
 import br.com.lemos.lemosfood.api.model.GrupoModel;
 import br.com.lemos.lemosfood.api.model.input.GrupoInput;
+import br.com.lemos.lemosfood.api.openapi.controller.GrupoControllerOpenApi;
 import br.com.lemos.lemosfood.domain.exception.GrupoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Grupo;
