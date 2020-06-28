@@ -18,11 +18,12 @@ import com.fasterxml.classmate.TypeResolver;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.CozinhaModel;
+import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
 import br.com.lemos.lemosfood.api.openapi.model.CozinhasModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.PageableModelOpenApi;
+import br.com.lemos.lemosfood.api.openapi.model.PedidosResumoModelOpenApi;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -57,24 +58,21 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
 				.globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-//				.globalOperationParameters(Arrays.asList(
-//						new ParameterBuilder()
-//						.name("campos")
-//						.description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
-//						.parameterType("query")
-//						.modelRef(new ModelRef("string"))
-//						.build()))
 				.additionalModels(typeResolver.resolve(Problem.class))
 				.ignoredParameterTypes(ServletWebRequest.class)
-				.directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
-				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(Page.class, CozinhaModel.class),
-						CozinhasModelOpenApi.class))
-				.apiInfo(apiInfo())
-				.tags(new Tag("Cidades", "Gerencia as cidades"),
-				        new Tag("Grupos", "Gerencia os grupos de usuários"),
-				        new Tag("Cozinhas", "Gerencia as cozinhas"),
-				        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"));
+	            .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(Page.class, CozinhaModel.class),
+	                    CozinhasModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(Page.class, PedidoResumoModel.class),
+	                    PedidosResumoModelOpenApi.class))
+	            .apiInfo(apiInfo())
+	            .tags(new Tag("Cidades", "Gerencia as cidades"),
+	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
+	                    new Tag("Cozinhas", "Gerencia as cozinhas"),
+	                    new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+	                    new Tag("Pedidos", "Gerencia os pedidos"));
 	}
 	
 	private List<ResponseMessage> globalGetResponseMessages () {
