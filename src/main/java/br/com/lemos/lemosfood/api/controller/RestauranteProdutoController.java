@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import br.com.lemos.lemosfood.api.assembler.ProdutoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.ProdutoModelAssembler;
 import br.com.lemos.lemosfood.api.model.ProdutoModel;
 import br.com.lemos.lemosfood.api.model.input.ProdutoInput;
+import br.com.lemos.lemosfood.api.openapi.controller.RestauranteProdutoControllerOpenApi;
 import br.com.lemos.lemosfood.domain.model.Produto;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.repository.ProdutoRepository;
@@ -27,8 +29,9 @@ import br.com.lemos.lemosfood.domain.service.CadastroProdutoService;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping("/restaurantes/{restauranteId}/produtos")
-public class RestauranteProdutoController {
+@RequestMapping(path = "/restaurantes/{restauranteId}/produtos", 
+    produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteProdutoController implements RestauranteProdutoControllerOpenApi {
 
     @Autowired
     private ProdutoRepository produtoRepository;
