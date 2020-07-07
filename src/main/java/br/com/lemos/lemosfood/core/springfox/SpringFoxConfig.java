@@ -1,4 +1,4 @@
-package br.com.lemos.lemosfood.core.openapi;
+package br.com.lemos.lemosfood.core.springfox;
 
 import java.io.File;
 import java.io.InputStream;
