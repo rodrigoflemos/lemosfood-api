@@ -1,6 +1,6 @@
 package br.com.lemos.lemosfood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.CidadeModel;
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponses;
 public interface CidadeControllerOpenApi {
 
 	@ApiOperation("Lista as cidades")
-	List<CidadeModel> listar();
+	CollectionModel<CidadeModel> listar();
 
 	@ApiOperation("Busca uma cidade por ID")
 	@ApiResponses({

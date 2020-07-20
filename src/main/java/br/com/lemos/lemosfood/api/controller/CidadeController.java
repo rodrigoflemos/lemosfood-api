@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,10 +51,26 @@ public class CidadeController implements CidadeControllerOpenApi {
 	
 	@Override
 	@GetMapping
-	public List<CidadeModel> listar() {
+	public CollectionModel<CidadeModel> listar() {
 	    List<Cidade> todasCidades = cidadeRepository.findAll();
 	    
-	    return cidadeModelAssembler.toCollectionModel(todasCidades);
+	    List<CidadeModel> cidadesModel = cidadeModelAssembler.toCollectionModel(todasCidades);
+	    
+	    cidadesModel.forEach(cidadeModel -> {
+	    	cidadeModel.add(linkTo(methodOn(CidadeController.class)
+					.buscar(cidadeModel.getId())).withSelfRel());
+
+			cidadeModel.add(linkTo(methodOn(CidadeController.class)
+					.listar()).withRel("cidades"));
+			
+			cidadeModel.getEstado().add(linkTo(methodOn(EstadoController.class)
+					.buscar(cidadeModel.getEstado().getId())).withSelfRel());
+	    });
+	    
+	    CollectionModel<CidadeModel> cidadesCollectionModel = new CollectionModel<>(cidadesModel); 
+	    cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
+	    
+	    return cidadesCollectionModel;
 	}
 
 	@Override
