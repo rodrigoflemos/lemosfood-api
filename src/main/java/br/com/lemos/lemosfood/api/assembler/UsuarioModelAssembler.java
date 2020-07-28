@@ -1,29 +1,45 @@
 package br.com.lemos.lemosfood.api.assembler;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import br.com.lemos.lemosfood.api.controller.UsuarioController;
+import br.com.lemos.lemosfood.api.controller.UsuarioGrupoController;
 import br.com.lemos.lemosfood.api.model.UsuarioModel;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 
 @Component
-public class UsuarioModelAssembler {
+public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<Usuario, UsuarioModel> {
 
     @Autowired
     private ModelMapper modelMapper;
     
-    public UsuarioModel toModel(Usuario usuario) {
-        return modelMapper.map(usuario, UsuarioModel.class);
+    public UsuarioModelAssembler() {
+        super(UsuarioController.class, UsuarioModel.class);
     }
     
-    public List<UsuarioModel> toCollectionModel(Collection<Usuario> usuarios) {
-        return usuarios.stream()
-                .map(usuario -> toModel(usuario))
-                .collect(Collectors.toList());
-    }            
-}                
+    @Override
+    public UsuarioModel toModel(Usuario usuario) {
+        UsuarioModel usuarioModel = createModelWithId(usuario.getId(), usuario);
+        modelMapper.map(usuario, usuarioModel);
+        
+        usuarioModel.add(linkTo(UsuarioController.class).withRel("usuarios"));
+        
+        usuarioModel.add(linkTo(methodOn(UsuarioGrupoController.class)
+                .listar(usuario.getId())).withRel("grupos-usuario"));
+        
+        return usuarioModel;
+    }
+    
+    @Override
+    public CollectionModel<UsuarioModel> toCollectionModel(Iterable<? extends Usuario> entities) {
+        return super.toCollectionModel(entities)
+            .add(linkTo(UsuarioController.class).withSelfRel());
+    }   
+}               
