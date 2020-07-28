@@ -1,7 +1,7 @@
 package br.com.lemos.lemosfood.api.openapi.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.PedidoModel;
@@ -19,12 +19,12 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Pedidos")
 public interface PedidoControllerOpenApi {
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-                name = "campos", paramType = "query", type = "string")
-    })
-    @ApiOperation("Pesquisa os pedidos")
-    Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable);
+	@ApiOperation("Pesquisa os pedidos")
+	@ApiImplicitParams({
+	    @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
+	            name = "campos", paramType = "query", type = "string")
+	})
+	PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable);       
     
     @ApiOperation("Registra um pedido")
     @ApiResponses({
