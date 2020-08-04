@@ -41,7 +41,7 @@ public class RestauranteModelAssembler
         restauranteModel.add(lemosLinks.linkToRestauranteFormasPagamento(restaurante.getId(), 
                 "formas-pagamento"));
         
-        restauranteModel.add(lemosLinks.linkToResponsaveisRestaurante(restaurante.getId(), 
+        restauranteModel.add(lemosLinks.linkToRestauranteResponsaveis(restaurante.getId(), 
                 "responsaveis"));
         
         if (restaurante.ativacaoPermitida()) {

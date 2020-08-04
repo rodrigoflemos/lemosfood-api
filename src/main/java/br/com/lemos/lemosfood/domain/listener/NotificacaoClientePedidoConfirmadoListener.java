@@ -2,7 +2,6 @@ package br.com.lemos.lemosfood.domain.listener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import br.com.lemos.lemosfood.domain.event.PedidoConfirmadoEvent;

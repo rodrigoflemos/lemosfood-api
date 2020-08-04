@@ -39,7 +39,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         
         return usuarioModelAssembler.toCollectionModel(restaurante.getResponsaveis())
                 .removeLinks()
-                .add(lemosLinks.linkToResponsaveisRestaurante(restauranteId));
+                .add(lemosLinks.linkToRestauranteResponsaveis(restauranteId));
     }
     
     @DeleteMapping("/{usuarioId}")
