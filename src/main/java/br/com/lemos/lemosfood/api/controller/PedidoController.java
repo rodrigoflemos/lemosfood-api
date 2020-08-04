@@ -27,6 +27,7 @@ import br.com.lemos.lemosfood.api.model.PedidoModel;
 import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
 import br.com.lemos.lemosfood.api.model.input.PedidoInput;
 import br.com.lemos.lemosfood.api.openapi.controller.PedidoControllerOpenApi;
+import br.com.lemos.lemosfood.core.data.PageWrapper;
 import br.com.lemos.lemosfood.core.data.PageableTranslator;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
@@ -63,10 +64,13 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@GetMapping
 	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 
 	        @PageableDefault(size = 10) Pageable pageable) {
-	    pageable = traduzirPageable(pageable);
+	    
+		Pageable pageableTraduzido = traduzirPageable(pageable);
 	    
 	    Page<Pedido> pedidosPage = pedidoRepository.findAll(
-	            PedidoSpecs.usandoFiltro(filtro), pageable);
+	            PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
+	    
+	    pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 	    
 	    return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
 	}
