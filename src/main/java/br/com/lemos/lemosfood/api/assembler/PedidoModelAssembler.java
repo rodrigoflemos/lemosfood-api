@@ -31,6 +31,12 @@ public class PedidoModelAssembler
         
         pedidoModel.add(lemosLinks.linkToPedidos());
         
+        pedidoModel.add(lemosLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+        
+        pedidoModel.add(lemosLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+        
+        pedidoModel.add(lemosLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        
         pedidoModel.getRestaurante().add(
         		lemosLinks.linkToRestaurante(pedido.getRestaurante().getId()));
         

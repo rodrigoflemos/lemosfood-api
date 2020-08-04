@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.controller.CidadeController;
 import br.com.lemos.lemosfood.api.controller.CozinhaController;
 import br.com.lemos.lemosfood.api.controller.EstadoController;
+import br.com.lemos.lemosfood.api.controller.FluxoPedidoController;
 import br.com.lemos.lemosfood.api.controller.FormaPagamentoController;
 import br.com.lemos.lemosfood.api.controller.PedidoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteController;
@@ -41,6 +42,18 @@ public class LemosLinks {
         String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
         
         return new Link(UriTemplate.of(pedidosUrl, PAGINACAO_VARIABLES.concat(filtroVariables)), "pedidos");
+	}
+		
+	public Link linkToConfirmacaoPedido(String codigoPedido, String rel) {
+		return linkTo(methodOn(FluxoPedidoController.class).confirmar(codigoPedido)).withRel(rel);
+	}
+	
+	public Link linkToEntregaPedido(String codigoPedido, String rel) {
+		return linkTo(methodOn(FluxoPedidoController.class).entregar(codigoPedido)).withRel(rel);
+	}
+	
+	public Link linkToCancelamentoPedido(String codigoPedido, String rel) {
+		return linkTo(methodOn(FluxoPedidoController.class).cancelar(codigoPedido)).withRel(rel);
 	}
 	
 	public Link linkToRestaurante(Long restauranteId, String rel) {
