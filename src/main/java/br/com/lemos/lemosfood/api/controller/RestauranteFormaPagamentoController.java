@@ -1,8 +1,7 @@
 package br.com.lemos.lemosfood.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lemos.lemosfood.api.LemosLinks;
 import br.com.lemos.lemosfood.api.assembler.FormaPagamentoModelAssembler;
 import br.com.lemos.lemosfood.api.model.FormaPagamentoModel;
 import br.com.lemos.lemosfood.api.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
 @RestController
@@ -29,9 +30,17 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Autowired
 	private FormaPagamentoModelAssembler formaPagamentoModelAssembler;
 	
+	@Autowired
+	private LemosLinks lemosLinks;
+	
+	@Override
 	@GetMapping
-	public List<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {		
-		return formaPagamentoModelAssembler.toCollectionModel(cadastroRestaurante.buscarOuFalhar(restauranteId).getFormasPagamento());	
+	public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
+	    Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+	    
+	    return formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
+	            .removeLinks()
+	            .add(lemosLinks.linkToRestauranteFormasPagamento(restauranteId));
 	}
 	
 	@DeleteMapping("/{formaPagamentoId}")

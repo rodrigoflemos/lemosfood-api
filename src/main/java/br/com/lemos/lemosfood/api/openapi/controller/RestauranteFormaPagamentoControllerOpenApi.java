@@ -1,6 +1,6 @@
 package br.com.lemos.lemosfood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.FormaPagamentoModel;
@@ -13,13 +13,13 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Restaurantes")
 public interface RestauranteFormaPagamentoControllerOpenApi {
     
-    @ApiOperation("Lista as formas de pagamento associadas a restaurante")
-    @ApiResponses({
-        @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
-    })
-    List<FormaPagamentoModel> listar(
-            @ApiParam(value = "ID do restaurante", example = "1", required = true)
-            Long restauranteId);
+	@ApiOperation("Lista as formas de pagamento associadas a restaurante")
+	@ApiResponses({
+	    @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
+	})
+	CollectionModel<FormaPagamentoModel> listar(
+	        @ApiParam(value = "ID do restaurante", example = "1", required = true)
+	        Long restauranteId);
 
     @ApiOperation("Desassociação de restaurante com forma de pagamento")
     @ApiResponses({

@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -48,8 +49,9 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     @Autowired
     private FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
     
+    @Override
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
     	
     	//Desabilitar Shallow Etag, senao da problema ao implementar o Deep Etag
     	ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -67,7 +69,8 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     	
         List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
         
-        List<FormaPagamentoModel> formasPagamentoModel = formaPagamentoModelAssembler.toCollectionModel(todasFormasPagamentos);
+        CollectionModel<FormaPagamentoModel> formasPagamentoModel = 
+        	    formaPagamentoModelAssembler.toCollectionModel(todasFormasPagamentos);
         
         return ResponseEntity.ok()
 //        		.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
@@ -130,4 +133,4 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     public void remover(@PathVariable Long formaPagamentoId) {
         cadastroFormaPagamento.excluir(formaPagamentoId);	
     }   
-}                
+}

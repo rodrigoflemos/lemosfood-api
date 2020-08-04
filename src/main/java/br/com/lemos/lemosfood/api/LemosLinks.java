@@ -208,4 +208,16 @@ public class LemosLinks {
 	    return linkTo(methodOn(RestauranteController.class)
 	            .ativar(restauranteId)).withRel(rel);
 	}
+	
+	public Link linkToRestauranteFormasPagamento(Long restauranteId) {
+	    return linkToRestauranteFormasPagamento(restauranteId, IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToFormasPagamento(String rel) {
+	    return linkTo(FormaPagamentoController.class).withRel(rel);
+	}
+
+	public Link linkToFormasPagamento() {
+	    return linkToFormasPagamento(IanaLinkRelations.SELF.value());
+	}  
 }
