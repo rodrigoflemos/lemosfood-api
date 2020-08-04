@@ -29,7 +29,7 @@ public class PedidoResumoModelAssembler
         PedidoResumoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModel);
         
-        pedidoModel.add(lemosLinks.linkToPedidos());
+        pedidoModel.add(lemosLinks.linkToPedidos("pedidos"));
         
         pedidoModel.getRestaurante().add(
         		lemosLinks.linkToRestaurante(pedido.getRestaurante().getId()));
