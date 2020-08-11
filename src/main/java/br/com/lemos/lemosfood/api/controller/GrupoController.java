@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import br.com.lemos.lemosfood.api.openapi.controller.GrupoControllerOpenApi;
 import br.com.lemos.lemosfood.domain.exception.GrupoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Grupo;
+import br.com.lemos.lemosfood.domain.repository.GrupoRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroGrupoService;
 
 @RestController
@@ -40,10 +42,14 @@ public class GrupoController implements GrupoControllerOpenApi {
     @Autowired
     private GrupoInputDisassembler grupoInputDisassembler;
     
+    @Autowired
+    private GrupoRepository grupoRepository;
+    
     @Override
-	@GetMapping
-    public List<GrupoModel> listar() {
-        List<Grupo> todosGrupos = cadastroGrupo.listar();
+    @GetMapping
+    public CollectionModel<GrupoModel> listar() {
+        List<Grupo> todosGrupos = grupoRepository.findAll();
+        
         return grupoModelAssembler.toCollectionModel(todosGrupos);
     }
     

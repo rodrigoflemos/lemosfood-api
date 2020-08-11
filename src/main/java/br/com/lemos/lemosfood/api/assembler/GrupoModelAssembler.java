@@ -1,29 +1,45 @@
 package br.com.lemos.lemosfood.api.assembler;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import br.com.lemos.lemosfood.api.LemosLinks;
+import br.com.lemos.lemosfood.api.controller.GrupoController;
 import br.com.lemos.lemosfood.api.model.GrupoModel;
 import br.com.lemos.lemosfood.domain.model.Grupo;
 
 @Component
-public class GrupoModelAssembler {
+public class GrupoModelAssembler 
+        extends RepresentationModelAssemblerSupport<Grupo, GrupoModel> {
 
-	@Autowired
+    @Autowired
     private ModelMapper modelMapper;
     
-    public GrupoModel toModel(Grupo grupo) {
-        return modelMapper.map(grupo, GrupoModel.class);
+    @Autowired
+    private LemosLinks lemosLinks;
+    
+    public GrupoModelAssembler() {
+        super(GrupoController.class, GrupoModel.class);
     }
     
-    public List<GrupoModel> toCollectionModel(Collection<Grupo> grupos) {
-        return grupos.stream()
-                .map(grupo -> toModel(grupo))
-                .collect(Collectors.toList());
-    }   
+    @Override
+    public GrupoModel toModel(Grupo grupo) {
+        GrupoModel grupoModel = createModelWithId(grupo.getId(), grupo);
+        modelMapper.map(grupo, grupoModel);
+        
+        grupoModel.add(lemosLinks.linkToGrupos("grupos"));
+        
+        grupoModel.add(lemosLinks.linkToGrupoPermissoes(grupo.getId(), "permissoes"));
+        
+        return grupoModel;
+    }
+    
+    @Override
+    public CollectionModel<GrupoModel> toCollectionModel(Iterable<? extends Grupo> entities) {
+        return super.toCollectionModel(entities)
+                .add(lemosLinks.linkToGrupos());
+    }            
 }

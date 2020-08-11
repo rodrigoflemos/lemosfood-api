@@ -1,6 +1,6 @@
 package br.com.lemos.lemosfood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.GrupoModel;
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponses;
 public interface GrupoControllerOpenApi {
 
 	@ApiOperation("Lista os grupos")
-	List<GrupoModel> listar();
+	CollectionModel<GrupoModel> listar();
 
 	@ApiOperation("Busca um grupo por ID")
 	@ApiResponses({ @ApiResponse(code = 400, message = "ID da grupo inválido", response = Problem.class),

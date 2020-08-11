@@ -1,6 +1,6 @@
 package br.com.lemos.lemosfood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.GrupoModel;
@@ -13,13 +13,13 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Usuários")
 public interface UsuarioGrupoControllerOpenApi {
 
-    @ApiOperation("Lista os grupos associados a um usuário")
-    @ApiResponses({
-        @ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)
-    })
-    List<GrupoModel> listar(
-            @ApiParam(value = "ID do usuário", example = "1", required = true)
-            Long usuarioId);
+	@ApiOperation("Lista os grupos associados a um usuário")
+	@ApiResponses({
+	    @ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)
+	})
+	CollectionModel<GrupoModel> listar(
+	        @ApiParam(value = "ID do usuário", example = "1", required = true)
+	        Long usuarioId);
 
     @ApiOperation("Desassociação de grupo com usuário")
     @ApiResponses({
