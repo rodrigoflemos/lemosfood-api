@@ -19,6 +19,7 @@ import br.com.lemos.lemosfood.api.controller.FormaPagamentoController;
 import br.com.lemos.lemosfood.api.controller.GrupoController;
 import br.com.lemos.lemosfood.api.controller.GrupoPermissaoController;
 import br.com.lemos.lemosfood.api.controller.PedidoController;
+import br.com.lemos.lemosfood.api.controller.PermissaoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteController;
 import br.com.lemos.lemosfood.api.controller.RestauranteFormaPagamentoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteProdutoController;
@@ -282,5 +283,27 @@ public class LemosLinks {
 	public Link linkToGrupoPermissoes(Long grupoId, String rel) {
 	    return linkTo(methodOn(GrupoPermissaoController.class)
 	            .listar(grupoId)).withRel(rel);
-	}   
+	}
+	
+	public Link linkToPermissoes(String rel) {
+	    return linkTo(PermissaoController.class).withRel(rel);
+	}
+
+	public Link linkToPermissoes() {
+	    return linkToPermissoes(IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToGrupoPermissoes(Long grupoId) {
+	    return linkToGrupoPermissoes(grupoId, IanaLinkRelations.SELF.value());
+	}
+
+	public Link linkToGrupoPermissaoAssociacao(Long grupoId, String rel) {
+	    return linkTo(methodOn(GrupoPermissaoController.class)
+	            .associar(grupoId, null)).withRel(rel);
+	}
+
+	public Link linkToGrupoPermissaoDesassociacao(Long grupoId, Long permissaoId, String rel) {
+	    return linkTo(methodOn(GrupoPermissaoController.class)
+	            .desassociar(grupoId, permissaoId)).withRel(rel);
+	}
 }
