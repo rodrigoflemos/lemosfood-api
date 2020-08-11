@@ -32,7 +32,10 @@ public class ProdutoModelAssembler
         modelMapper.map(produto, produtoModel);
         
         produtoModel.add(lemosLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
+
+        produtoModel.add(lemosLinks.linkToFotoProduto(
+                produto.getRestaurante().getId(), produto.getId(), "foto"));
         
         return produtoModel;
-    }   
+    }       
 } 

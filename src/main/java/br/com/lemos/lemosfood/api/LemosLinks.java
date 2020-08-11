@@ -20,6 +20,7 @@ import br.com.lemos.lemosfood.api.controller.PedidoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteController;
 import br.com.lemos.lemosfood.api.controller.RestauranteFormaPagamentoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteProdutoController;
+import br.com.lemos.lemosfood.api.controller.RestauranteProdutoFotoController;
 import br.com.lemos.lemosfood.api.controller.RestauranteUsuarioResponsavelController;
 import br.com.lemos.lemosfood.api.controller.UsuarioController;
 import br.com.lemos.lemosfood.api.controller.UsuarioGrupoController;
@@ -257,5 +258,14 @@ public class LemosLinks {
 
 	public Link linkToProdutos(Long restauranteId) {
 	    return linkToProdutos(restauranteId, IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToFotoProduto(Long restauranteId, Long produtoId, String rel) {
+	    return linkTo(methodOn(RestauranteProdutoFotoController.class)
+	            .buscar(restauranteId, produtoId)).withRel(rel);
+	}
+
+	public Link linkToFotoProduto(Long restauranteId, Long produtoId) {
+	    return linkToFotoProduto(restauranteId, produtoId, IanaLinkRelations.SELF.value());
 	}
 }
