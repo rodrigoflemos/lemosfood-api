@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lemos.lemosfood.api.LemosLinks;
 import br.com.lemos.lemosfood.api.assembler.ProdutoInputDisassembler;
 import br.com.lemos.lemosfood.api.assembler.ProdutoModelAssembler;
 import br.com.lemos.lemosfood.api.model.ProdutoModel;
@@ -48,22 +50,25 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     @Autowired
     private ProdutoInputDisassembler produtoInputDisassembler;
     
+    @Autowired
+    private LemosLinks lemosLinks;
+
+    @Override
     @GetMapping
-    public List<ProdutoModel> listar(
-    		@PathVariable Long restauranteId,
-    		@RequestParam(required = false) boolean incluirInativos) {
+    public CollectionModel<ProdutoModel> listar(@PathVariable Long restauranteId,
+            @RequestParam(required = false, defaultValue = "false") Boolean incluirInativos) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
         
         List<Produto> todosProdutos = null;
         
-		if (incluirInativos) {
-			todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
-		} else {
-			todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
-		}
+        if (incluirInativos) {
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+        }
         
-        
-        return produtoModelAssembler.toCollectionModel(todosProdutos);
+        return produtoModelAssembler.toCollectionModel(todosProdutos)
+                .add(lemosLinks.linkToProdutos(restauranteId));
     }
     
     @GetMapping("/{produtoId}")
