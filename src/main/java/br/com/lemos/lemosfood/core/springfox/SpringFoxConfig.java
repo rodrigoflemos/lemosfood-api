@@ -28,9 +28,11 @@ import com.fasterxml.classmate.TypeResolver;
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
 import br.com.lemos.lemosfood.api.model.CidadeModel;
 import br.com.lemos.lemosfood.api.model.CozinhaModel;
+import br.com.lemos.lemosfood.api.model.EstadoModel;
 import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
 import br.com.lemos.lemosfood.api.openapi.model.CidadesModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.CozinhasModelOpenApi;
+import br.com.lemos.lemosfood.api.openapi.model.EstadosModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.LinksModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.PageableModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.PedidosResumoModelOpenApi;
@@ -85,6 +87,9 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	                    typeResolver.resolve(CollectionModel.class, CidadeModel.class),
 	                    CidadesModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(CollectionModel.class, EstadoModel.class),
+	                    EstadosModelOpenApi.class))
 	            .apiInfo(apiInfo())
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
