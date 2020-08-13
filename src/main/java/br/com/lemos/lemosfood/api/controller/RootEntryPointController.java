@@ -29,6 +29,7 @@ public class RootEntryPointController {
 		rootEntryPointModel.add(lemosLinks.linkToFormasPagamento("formas-pagamento"));
 		rootEntryPointModel.add(lemosLinks.linkToEstados("estados"));
 		rootEntryPointModel.add(lemosLinks.linkToCidades("cidades"));
+		rootEntryPointModel.add(lemosLinks.linkToEstatisticas("estatisticas"));
 		
 		return rootEntryPointModel;
 	}
