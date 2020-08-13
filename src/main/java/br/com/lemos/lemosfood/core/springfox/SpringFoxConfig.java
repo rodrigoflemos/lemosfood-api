@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Links;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,8 +25,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.fasterxml.classmate.TypeResolver;
 
 import br.com.lemos.lemosfood.api.exceptionhandler.Problem;
+import br.com.lemos.lemosfood.api.model.CidadeModel;
 import br.com.lemos.lemosfood.api.model.CozinhaModel;
 import br.com.lemos.lemosfood.api.model.PedidoResumoModel;
+import br.com.lemos.lemosfood.api.openapi.model.CidadesModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.CozinhasModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.LinksModelOpenApi;
 import br.com.lemos.lemosfood.api.openapi.model.PageableModelOpenApi;
@@ -78,6 +81,9 @@ public class SpringFoxConfig implements WebMvcConfigurer{
 	            .alternateTypeRules(AlternateTypeRules.newRule(
 	                    typeResolver.resolve(Page.class, PedidoResumoModel.class),
 	                    PedidosResumoModelOpenApi.class))
+	            .alternateTypeRules(AlternateTypeRules.newRule(
+	                    typeResolver.resolve(CollectionModel.class, CidadeModel.class),
+	                    CidadesModelOpenApi.class))
 	            .apiInfo(apiInfo())
 	            .tags(new Tag("Cidades", "Gerencia as cidades"),
 	                    new Tag("Grupos", "Gerencia os grupos de usuários"),
