@@ -10,7 +10,6 @@ import br.com.lemos.lemosfood.api.model.RestauranteApenasNomeModel;
 import br.com.lemos.lemosfood.api.model.RestauranteBasicoModel;
 import br.com.lemos.lemosfood.api.model.RestauranteModel;
 import br.com.lemos.lemosfood.api.model.input.RestauranteInput;
-import br.com.lemos.lemosfood.api.openapi.model.RestauranteBasicoModelOpenApi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,12 +21,11 @@ import io.swagger.annotations.ApiResponses;
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerOpenApi {
 
-	@ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoModelOpenApi.class)
+	@ApiOperation(value = "Lista restaurantes")
 	@ApiImplicitParams({
 	    @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome",
 	            name = "projecao", paramType = "query", type = "string")
 	})
-//		@JsonView(RestauranteView.Resumo.class)
 	CollectionModel<RestauranteBasicoModel> listar();
 
 	@ApiOperation(value = "Lista restaurantes", hidden = true)
