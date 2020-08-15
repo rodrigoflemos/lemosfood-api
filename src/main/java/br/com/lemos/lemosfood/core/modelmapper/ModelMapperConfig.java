@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import br.com.lemos.lemosfood.api.model.EnderecoModel;
-import br.com.lemos.lemosfood.api.model.input.ItemPedidoInput;
+import br.com.lemos.lemosfood.api.v1.model.EnderecoModel;
+import br.com.lemos.lemosfood.api.v1.model.input.ItemPedidoInput;
 import br.com.lemos.lemosfood.domain.model.Endereco;
 import br.com.lemos.lemosfood.domain.model.ItemPedido;
 
