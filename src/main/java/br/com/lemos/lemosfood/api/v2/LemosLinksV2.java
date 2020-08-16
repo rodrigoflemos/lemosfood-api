@@ -7,6 +7,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
 import br.com.lemos.lemosfood.api.v2.controller.CidadeControllerV2;
+import br.com.lemos.lemosfood.api.v2.controller.CozinhaControllerV2;
 
 @Component
 public class LemosLinksV2 {
@@ -17,5 +18,13 @@ public class LemosLinksV2 {
 	
 	public Link linkToCidades() {
 		return linkToCidades(IanaLinkRelations.SELF.value());
+	}
+	
+	public Link linkToCozinhas(String rel) {
+	    return linkTo(CozinhaControllerV2.class).withRel(rel);
+	}
+
+	public Link linkToCozinhas() {
+	    return linkToCozinhas(IanaLinkRelations.SELF.value());
 	}
 }
