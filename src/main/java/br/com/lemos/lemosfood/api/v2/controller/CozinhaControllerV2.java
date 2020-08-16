@@ -24,13 +24,14 @@ import br.com.lemos.lemosfood.api.v2.assembler.CozinhaInputDisassemblerV2;
 import br.com.lemos.lemosfood.api.v2.assembler.CozinhaModelAssemblerV2;
 import br.com.lemos.lemosfood.api.v2.model.CozinhaModelV2;
 import br.com.lemos.lemosfood.api.v2.model.input.CozinhaInputV2;
+import br.com.lemos.lemosfood.api.v2.openapi.controller.CozinhaControllerV2OpenApi;
 import br.com.lemos.lemosfood.domain.model.Cozinha;
 import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroCozinhaService;
 
 @RestController
 @RequestMapping(value = "/v2/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CozinhaControllerV2 {
+public class CozinhaControllerV2 implements CozinhaControllerV2OpenApi {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;

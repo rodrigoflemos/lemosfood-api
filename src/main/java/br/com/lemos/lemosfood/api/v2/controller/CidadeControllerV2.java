@@ -23,6 +23,7 @@ import br.com.lemos.lemosfood.api.v2.assembler.CidadeInputDisassemblerV2;
 import br.com.lemos.lemosfood.api.v2.assembler.CidadeModelAssemblerV2;
 import br.com.lemos.lemosfood.api.v2.model.CidadeModelV2;
 import br.com.lemos.lemosfood.api.v2.model.input.CidadeInputV2;
+import br.com.lemos.lemosfood.api.v2.openapi.controller.CidadeControllerV2OpenApi;
 import br.com.lemos.lemosfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Cidade;
@@ -31,7 +32,7 @@ import br.com.lemos.lemosfood.domain.service.CadastroCidadeService;
 
 @RestController
 @RequestMapping(value = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CidadeControllerV2 {
+public class CidadeControllerV2 implements CidadeControllerV2OpenApi{
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
@@ -45,6 +46,7 @@ public class CidadeControllerV2 {
 	@Autowired
 	private CidadeInputDisassemblerV2 cidadeInputDisassembler;
 	
+	@Override
 	@GetMapping
 	public CollectionModel<CidadeModelV2> listar() {
 		List<Cidade> todasCidades = cidadeRepository.findAll();
@@ -59,6 +61,7 @@ public class CidadeControllerV2 {
 		return cidadeModelAssembler.toModel(cidade);
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CidadeModelV2 adicionar(@RequestBody @Valid CidadeInputV2 cidadeInput) {
@@ -77,6 +80,7 @@ public class CidadeControllerV2 {
 		}
 	}
 	
+	@Override
 	@PutMapping("/{cidadeId}")
 	public CidadeModelV2 atualizar(@PathVariable Long cidadeId,
 			@RequestBody @Valid CidadeInputV2 cidadeInput) {
@@ -93,6 +97,7 @@ public class CidadeControllerV2 {
 		}
 	}
 	
+	@Override
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) {
