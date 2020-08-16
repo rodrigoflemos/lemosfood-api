@@ -21,7 +21,7 @@ import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
 @RestController
-@RequestMapping(path = "/restaurantes/{restauranteId}/responsaveis",
+@RequestMapping(path = "/v1/restaurantes/{restauranteId}/responsaveis",
 produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 

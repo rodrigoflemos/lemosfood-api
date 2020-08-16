@@ -29,7 +29,7 @@ import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroCozinhaService;
 
 @RestController
-@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CozinhaController implements CozinhaControllerOpenApi {
 
 	@Autowired

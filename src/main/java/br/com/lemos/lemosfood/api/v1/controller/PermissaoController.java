@@ -16,7 +16,7 @@ import br.com.lemos.lemosfood.domain.model.Permissao;
 import br.com.lemos.lemosfood.domain.repository.PermissaoRepository;
 
 @RestController
-@RequestMapping(path = "/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PermissaoController implements PermissaoControllerOpenApi {
 
     @Autowired

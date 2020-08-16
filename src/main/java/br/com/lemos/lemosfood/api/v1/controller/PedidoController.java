@@ -39,7 +39,7 @@ import br.com.lemos.lemosfood.domain.service.EmissaoPedidoService;
 import br.com.lemos.lemosfood.infrastructure.repository.spec.PedidoSpecs;
 
 @RestController
-@RequestMapping(path = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedidoController implements PedidoControllerOpenApi {
 
 	@Autowired

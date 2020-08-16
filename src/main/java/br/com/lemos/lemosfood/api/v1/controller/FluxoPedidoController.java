@@ -14,7 +14,7 @@ import br.com.lemos.lemosfood.api.v1.openapi.controller.FluxoPedidoControllerOpe
 import br.com.lemos.lemosfood.domain.service.FluxoPedidoService;
 
 @RestController
-@RequestMapping(path = "/pedidos/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/pedidos/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
 	
 	@Autowired

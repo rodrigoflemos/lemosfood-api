@@ -28,7 +28,7 @@ import br.com.lemos.lemosfood.domain.repository.EstadoRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroEstadoService;
 
 @RestController
-@RequestMapping(path = "/estados", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/estados", produces = MediaType.APPLICATION_JSON_VALUE)
 public class EstadoController implements EstadoControllerOpenApi {
 
 	@Autowired
