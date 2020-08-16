@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.springframework.hateoas.Links;
 
-import br.com.lemos.lemosfood.api.v1.model.CidadeModel;
 import br.com.lemos.lemosfood.api.v1.model.CozinhaModel;
-import br.com.lemos.lemosfood.api.v1.openapi.model.CidadesModelOpenApi.CidadeEmbeddedModelOpenApi;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.Getter;
