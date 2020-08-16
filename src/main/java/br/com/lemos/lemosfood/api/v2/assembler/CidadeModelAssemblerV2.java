@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
+import br.com.lemos.lemosfood.api.v2.LemosLinksV2;
 import br.com.lemos.lemosfood.api.v2.controller.CidadeControllerV2;
 import br.com.lemos.lemosfood.api.v2.model.CidadeModelV2;
 import br.com.lemos.lemosfood.domain.model.Cidade;
@@ -18,7 +19,7 @@ public class CidadeModelAssemblerV2 extends RepresentationModelAssemblerSupport<
     private ModelMapper modelMapper;
     
     @Autowired
-    private LemosLinks lemosLinks;
+    private LemosLinksV2 lemosLinks;
     
     public CidadeModelAssemblerV2 () {
     	super(CidadeControllerV2.class, CidadeModelV2.class);
