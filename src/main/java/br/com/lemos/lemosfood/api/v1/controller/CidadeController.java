@@ -46,6 +46,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CidadeInputDisassembler cidadeInputDisassembler;      
 	
+	@Deprecated
 	@Override
 	@GetMapping
 	public CollectionModel<CidadeModel> listar() {
