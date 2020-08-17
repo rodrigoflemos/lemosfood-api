@@ -27,11 +27,13 @@ import br.com.lemos.lemosfood.api.v1.openapi.controller.CozinhaControllerOpenApi
 import br.com.lemos.lemosfood.domain.model.Cozinha;
 import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
 import br.com.lemos.lemosfood.domain.service.CadastroCozinhaService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/v1/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CozinhaController implements CozinhaControllerOpenApi {
-
+	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
@@ -49,7 +51,8 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 	
 	@GetMapping
 	public PagedModel<CozinhaModel> listar(Pageable pageable) {
-	    
+		log.info("Consultando cozinhas com páginas de {} registros...", pageable.getPageSize());
+		
 		Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 		
 		PagedModel<CozinhaModel> cozinhasPagedModel = pagedResourcesAssembler
