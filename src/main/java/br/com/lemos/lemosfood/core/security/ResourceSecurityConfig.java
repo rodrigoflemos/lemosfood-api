@@ -15,6 +15,7 @@ public class ResourceSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.anyRequest().authenticated() //Autoriza qualquer requisicao autenticada
 			.and()
+			.cors().and() //Resolve problema de autenticacao ao acessar OPTIONS
 			.oauth2ResourceServer().opaqueToken();
 	}
 }
