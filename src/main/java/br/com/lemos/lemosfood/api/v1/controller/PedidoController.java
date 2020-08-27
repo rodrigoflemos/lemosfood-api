@@ -29,6 +29,7 @@ import br.com.lemos.lemosfood.api.v1.model.input.PedidoInput;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import br.com.lemos.lemosfood.core.data.PageWrapper;
 import br.com.lemos.lemosfood.core.data.PageableTranslator;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.filter.PedidoFilter;
@@ -59,6 +60,9 @@ public class PedidoController implements PedidoControllerOpenApi {
 	
 	@Autowired
 	private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+	
+	@Autowired
+	private LemosSecurity lemosSecurity;
 
 	@Override
 	@GetMapping
@@ -104,9 +108,8 @@ public class PedidoController implements PedidoControllerOpenApi {
 		try {
 			Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-			// TODO pegar usuário autenticado
 			novoPedido.setCliente(new Usuario());
-			novoPedido.getCliente().setId(1L);
+			novoPedido.getCliente().setId(lemosSecurity.getUsuarioId());
 
 			novoPedido = emissaoPedido.emitir(novoPedido);
 
