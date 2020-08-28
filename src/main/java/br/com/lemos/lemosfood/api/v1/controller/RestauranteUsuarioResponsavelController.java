@@ -17,6 +17,7 @@ import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.assembler.UsuarioModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.UsuarioModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
@@ -34,6 +35,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private LemosLinks lemosLinks;
     
+    @CheckSecurity.Restaurantes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
@@ -53,6 +55,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         return usuariosModel;
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @Override
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -62,6 +65,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeEditar
     @Override
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

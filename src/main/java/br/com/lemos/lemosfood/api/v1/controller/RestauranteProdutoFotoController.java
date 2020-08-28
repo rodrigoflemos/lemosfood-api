@@ -28,6 +28,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.FotoProdutoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.FotoProdutoModel;
 import br.com.lemos.lemosfood.api.v1.model.input.FotoProdutoInput;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.model.FotoProduto;
 import br.com.lemos.lemosfood.domain.model.Produto;
@@ -53,6 +54,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Autowired
 	private FotoStorageService fotoStorage;
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput,
@@ -71,6 +73,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return fotoProdutoModelAssembler.toModel(fotoSalva);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
 	@GetMapping
 	public FotoProdutoModel buscar(@PathVariable Long restauranteId, 
 	        @PathVariable Long produtoId) {
@@ -79,6 +82,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	    return fotoProdutoModelAssembler.toModel(fotoProduto);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeEditar
 	@DeleteMapping
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long restauranteId, 
