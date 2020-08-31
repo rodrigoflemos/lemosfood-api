@@ -6,6 +6,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public @interface CheckSecurity {
@@ -41,6 +42,18 @@ public @interface CheckSecurity {
 	    @Retention(RUNTIME)
 	    @Target(METHOD)
 	    public @interface PodeConsultar { }
+	    
+	}
+	
+	public @interface Pedidos {
+
+		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+		@PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or "
+				+ "@lemosSecurity.getUsuarioId() == returnObject.cliente.id or "
+				+ "@lemosSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
+	    @Retention(RUNTIME)
+	    @Target(METHOD)
+	    public @interface PodeBuscar { }
 	    
 	}
 }

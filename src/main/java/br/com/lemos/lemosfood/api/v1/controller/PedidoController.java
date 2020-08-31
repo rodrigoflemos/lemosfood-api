@@ -29,6 +29,7 @@ import br.com.lemos.lemosfood.api.v1.model.input.PedidoInput;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.PedidoControllerOpenApi;
 import br.com.lemos.lemosfood.core.data.PageWrapper;
 import br.com.lemos.lemosfood.core.data.PageableTranslator;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
@@ -97,9 +98,13 @@ public class PedidoController implements PedidoControllerOpenApi {
 //		return pedidosWrapper;
 //	}
 
+	@CheckSecurity.Pedidos.PodeBuscar
+	@Override
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {
-		return pedidoModelAssembler.toModel(emissaoPedido.buscarOuFalhar(codigoPedido));
+		Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
+		
+		return pedidoModelAssembler.toModel(pedido);
 	}
 
 	@PostMapping
