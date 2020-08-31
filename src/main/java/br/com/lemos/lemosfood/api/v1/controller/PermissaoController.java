@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lemos.lemosfood.api.v1.assembler.PermissaoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.PermissaoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.PermissaoControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.model.Permissao;
 import br.com.lemos.lemosfood.domain.repository.PermissaoRepository;
 
@@ -25,6 +26,7 @@ public class PermissaoController implements PermissaoControllerOpenApi {
     @Autowired
     private PermissaoModelAssembler permissaoModelAssembler;
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<PermissaoModel> listar() {

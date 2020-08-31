@@ -17,6 +17,7 @@ import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.assembler.PermissaoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.PermissaoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.GrupoPermissaoControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.model.Grupo;
 import br.com.lemos.lemosfood.domain.service.CadastroGrupoService;
 
@@ -33,6 +34,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 	@Autowired
 	private LemosLinks lemosLinks;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@Override
 	@GetMapping
 	public CollectionModel<PermissaoModel> listar(@PathVariable Long grupoId) {
@@ -52,6 +54,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 	    return permissoesModel;
 	}    
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@Override
 	@DeleteMapping("/{permissaoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -61,6 +64,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 	    return ResponseEntity.noContent().build();
 	}
 
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
 	@Override
 	@PutMapping("/{permissaoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

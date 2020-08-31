@@ -17,6 +17,7 @@ import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.assembler.GrupoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.GrupoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 import br.com.lemos.lemosfood.domain.service.CadastroUsuarioService;
 
@@ -34,6 +35,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     @Autowired
     private LemosLinks lemosLinks; 
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<GrupoModel> listar(@PathVariable Long usuarioId) {
@@ -51,6 +53,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
         return gruposModel;
     }    
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,6 +63,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @PutMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

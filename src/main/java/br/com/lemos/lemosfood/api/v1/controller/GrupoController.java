@@ -23,6 +23,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.GrupoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.GrupoModel;
 import br.com.lemos.lemosfood.api.v1.model.input.GrupoInput;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.GrupoControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.exception.GrupoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Grupo;
@@ -45,6 +46,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     @Autowired
     private GrupoRepository grupoRepository;
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<GrupoModel> listar() {
@@ -53,12 +55,14 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toCollectionModel(todosGrupos);
     }
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
 	@GetMapping("/{grupoId}")
     public GrupoModel buscar(@PathVariable Long grupoId) {
         return grupoModelAssembler.toModel(cadastroGrupo.buscarOuFalhar(grupoId));
     }
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
 	@PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -70,6 +74,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toModel(grupo);
     }
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
 	@PutMapping("/{grupoId}")
     public GrupoModel atualizar(@PathVariable Long grupoId,
@@ -90,6 +95,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoModelAssembler.toModel(grupoAtual);
     }
     
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
 	@DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
