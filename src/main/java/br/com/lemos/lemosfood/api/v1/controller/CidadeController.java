@@ -24,6 +24,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.CidadeModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.CidadeModel;
 import br.com.lemos.lemosfood.api.v1.model.input.CidadeInput;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.CidadeControllerOpenApi;
+import br.com.lemos.lemosfood.core.security.CheckSecurity;
 import br.com.lemos.lemosfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.lemos.lemosfood.domain.exception.NegocioException;
 import br.com.lemos.lemosfood.domain.model.Cidade;
@@ -46,6 +47,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	@Autowired
 	private CidadeInputDisassembler cidadeInputDisassembler;      
 	
+	@CheckSecurity.Cidades.PodeConsultar
 	@Deprecated
 	@Override
 	@GetMapping
@@ -55,6 +57,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	   return cidadeModelAssembler.toCollectionModel(todasCidades);
 	}
 
+	@CheckSecurity.Cidades.PodeConsultar
 	@Override
 	@GetMapping("/{cidadeId}")
 	public CidadeModel buscar(@PathVariable Long cidadeId) {
@@ -63,6 +66,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 		return cidadeModelAssembler.toModel(cidade);
 	}
 
+	@CheckSecurity.Cidades.PodeEditar
 	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -83,6 +87,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	    }
 	}
 
+	@CheckSecurity.Cidades.PodeEditar
 	@Override
 	@PutMapping("/{cidadeId}")
 	public CidadeModel atualizar(
@@ -101,6 +106,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 	    }
 	}
 	
+	@CheckSecurity.Cidades.PodeEditar
 	@Override
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
