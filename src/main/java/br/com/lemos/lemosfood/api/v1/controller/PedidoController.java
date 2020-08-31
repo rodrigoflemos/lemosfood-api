@@ -65,6 +65,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 	@Autowired
 	private LemosSecurity lemosSecurity;
 
+	@CheckSecurity.Pedidos.PodePesquisar
 	@Override
 	@GetMapping
 	public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, 

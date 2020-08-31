@@ -54,6 +54,13 @@ public @interface CheckSecurity {
 	    @Retention(RUNTIME)
 	    @Target(METHOD)
 	    public @interface PodeBuscar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULTAR_PEDIDOS') or " 
+				+ "@lemosSecurity.getUsuarioId() == #filtro.clienteId or"
+				+ "@lemosSecurity.gerenciaRestaurante(#filtro.restauranteId))")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodePesquisar { }
 	    
 	}
 }
