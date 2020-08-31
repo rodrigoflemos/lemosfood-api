@@ -61,6 +61,18 @@ public @interface CheckSecurity {
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodePesquisar { }
+		
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeCriar { }
+
+		@PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('GERENCIAR_PEDIDOS') or "
+				+ "@lemosSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+		@Retention(RUNTIME)
+		@Target(METHOD)
+		public @interface PodeGerenciarPedidos {
+		}
 	    
 	}
 }

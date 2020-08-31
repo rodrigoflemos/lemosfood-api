@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import br.com.lemos.lemosfood.domain.repository.PedidoRepository;
 import br.com.lemos.lemosfood.domain.repository.RestauranteRepository;
 
 @Component
@@ -13,6 +14,9 @@ public class LemosSecurity {
 
 	@Autowired
 	RestauranteRepository restauranteRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
 	
 	public Authentication getAuthentication() {
 		return SecurityContextHolder.getContext().getAuthentication();
@@ -31,4 +35,8 @@ public class LemosSecurity {
 		    
 		    return restauranteRepository.existsResponsavel(restauranteId, getUsuarioId());
 	}
+	
+	public boolean gerenciaRestauranteDoPedido(String codigoPedido) {
+	    return pedidoRepository.isPedidoGerenciadoPor(codigoPedido, getUsuarioId());
+	}    
 }
