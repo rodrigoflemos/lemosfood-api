@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.PedidoController;
 import br.com.lemos.lemosfood.api.v1.model.PedidoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Pedido;
 
 @Component
@@ -19,6 +20,9 @@ public class PedidoModelAssembler
     
     @Autowired
     private LemosLinks lemosLinks;
+    
+    @Autowired
+    private LemosSecurity lemosSecurity;
 
     public PedidoModelAssembler() {
         super(PedidoController.class, PedidoModel.class);
@@ -31,16 +35,19 @@ public class PedidoModelAssembler
         
         pedidoModel.add(lemosLinks.linkToPedidos("pedidos"));
         
-        if (pedido.podeSerConfirmado()) {
-        	pedidoModel.add(lemosLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));			
-		}
-        
-        if (pedido.podeSerCancelado()) {
-        	pedidoModel.add(lemosLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
-        }
-        
-        if (pedido.podeSerEntregue()) {
-        	pedidoModel.add(lemosLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        if(lemosSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+        	
+        	if (pedido.podeSerConfirmado()) {
+        		pedidoModel.add(lemosLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));			
+        	}
+        	
+        	if (pedido.podeSerCancelado()) {
+        		pedidoModel.add(lemosLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+        	}
+        	
+        	if (pedido.podeSerEntregue()) {
+        		pedidoModel.add(lemosLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        	}
         }
         
         pedidoModel.getRestaurante().add(

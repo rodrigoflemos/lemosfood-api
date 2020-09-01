@@ -67,13 +67,11 @@ public @interface CheckSecurity {
 		@Target(METHOD)
 		public @interface PodeCriar { }
 
-		@PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('GERENCIAR_PEDIDOS') or "
-				+ "@lemosSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+		@PreAuthorize("@lemosSecurity.podeGerenciarPedidos(#codigoPedido)")
 		@Retention(RUNTIME)
 		@Target(METHOD)
 		public @interface PodeGerenciarPedidos {
 		}
-	    
 	}
 	
 	public @interface FormasPagamento {
