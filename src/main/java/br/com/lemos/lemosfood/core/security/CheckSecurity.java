@@ -49,14 +49,14 @@ public @interface CheckSecurity {
 
 		@PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
 		@PostAuthorize("hasAuthority('CONSULTAR_PEDIDOS') or "
-				+ "@lemosSecurity.getUsuarioId() == returnObject.cliente.id or "
+				+ "@lemosSecurity.usuarioAutenticadoIgual(returnObject.cliente.id) or "
 				+ "@lemosSecurity.gerenciaRestaurante(returnObject.restaurante.id)")
 	    @Retention(RUNTIME)
 	    @Target(METHOD)
 	    public @interface PodeBuscar { }
 		
 		@PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULTAR_PEDIDOS') or " 
-				+ "@lemosSecurity.getUsuarioId() == #filtro.clienteId or"
+				+ "@lemosSecurity.usuarioAutenticadoIgual(#filtro.clienteId) or"
 				+ "@lemosSecurity.gerenciaRestaurante(#filtro.restauranteId))")
 		@Retention(RUNTIME)
 		@Target(METHOD)
@@ -121,13 +121,13 @@ public @interface CheckSecurity {
 	public @interface UsuariosGruposPermissoes {
 
 	    @PreAuthorize("hasAuthority('SCOPE_WRITE') and "
-	            + "@algaSecurity.getUsuarioId() == #usuarioId")
+	            + "@lemosSecurity.usuarioAutenticadoIgual(#usuarioId)")
 	    @Retention(RUNTIME)
 	    @Target(METHOD)
 	    public @interface PodeAlterarPropriaSenha { }
 	    
 	    @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('EDITAR_USUARIOS_GRUPOS_PERMISSOES') or "
-	            + "@algaSecurity.getUsuarioId() == #usuarioId)")
+	            + "@lemosSecurity.usuarioAutenticadoIgual(#usuarioId))")
 	    @Retention(RUNTIME)
 	    @Target(METHOD)
 	    public @interface PodeAlterarUsuario { }
