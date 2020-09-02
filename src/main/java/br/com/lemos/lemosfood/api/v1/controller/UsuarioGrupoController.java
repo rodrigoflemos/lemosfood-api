@@ -18,6 +18,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.GrupoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.GrupoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.UsuarioGrupoControllerOpenApi;
 import br.com.lemos.lemosfood.core.security.CheckSecurity;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 import br.com.lemos.lemosfood.domain.service.CadastroUsuarioService;
 
@@ -33,7 +34,10 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
     private GrupoModelAssembler grupoModelAssembler;
     
     @Autowired
-    private LemosLinks lemosLinks; 
+    private LemosLinks lemosLinks;
+    
+    @Autowired
+    private LemosSecurity lemosSecurity;
     
     @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
@@ -42,16 +46,19 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
         
         CollectionModel<GrupoModel> gruposModel = grupoModelAssembler.toCollectionModel(usuario.getGrupos())
-                .removeLinks()
-                .add(lemosLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+                .removeLinks();
         
-        gruposModel.getContent().forEach(grupoModel -> {
-            grupoModel.add(lemosLinks.linkToUsuarioGrupoDesassociacao(
-                    usuarioId, grupoModel.getId(), "desassociar"));
-        });
+        if (lemosSecurity.podeEditarUsuariosGruposPermissoes()) {
+            gruposModel.add(lemosLinks.linkToUsuarioGrupoAssociacao(usuarioId, "associar"));
+            
+            gruposModel.getContent().forEach(grupoModel -> {
+                grupoModel.add(lemosLinks.linkToUsuarioGrupoDesassociacao(
+                        usuarioId, grupoModel.getId(), "desassociar"));
+            });
+        }
         
         return gruposModel;
-    }    
+    }
     
     @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override

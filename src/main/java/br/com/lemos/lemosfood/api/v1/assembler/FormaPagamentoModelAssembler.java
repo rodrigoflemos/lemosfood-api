@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.FormaPagamentoController;
 import br.com.lemos.lemosfood.api.v1.model.FormaPagamentoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.FormaPagamento;
 
 @Component
@@ -21,6 +22,9 @@ public class FormaPagamentoModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public FormaPagamentoModelAssembler() {
         super(FormaPagamentoController.class, FormaPagamentoModel.class);
     }
@@ -32,14 +36,23 @@ public class FormaPagamentoModelAssembler
         
         modelMapper.map(formaPagamento, formaPagamentoModel);
         
-        formaPagamentoModel.add(lemosLinks.linkToFormasPagamento("formasPagamento"));
+        if (lemosSecurity.podeConsultarFormasPagamento()) {
+            formaPagamentoModel.add(lemosLinks.linkToFormasPagamento("formasPagamento"));
+        }
         
         return formaPagamentoModel;
     }
-    
+
     @Override
     public CollectionModel<FormaPagamentoModel> toCollectionModel(Iterable<? extends FormaPagamento> entities) {
-        return super.toCollectionModel(entities)
-            .add(lemosLinks.linkToFormasPagamento());
-    }   
+        CollectionModel<FormaPagamentoModel> collectionModel = super.toCollectionModel(entities);
+        
+        if (lemosSecurity.podeConsultarFormasPagamento()) {
+            collectionModel.add(lemosLinks.linkToFormasPagamento());
+        }
+            
+        return collectionModel;
+    }
+
+
 }

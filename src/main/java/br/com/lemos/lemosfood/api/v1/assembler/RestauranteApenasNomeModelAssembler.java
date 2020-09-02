@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.RestauranteController;
 import br.com.lemos.lemosfood.api.v1.model.RestauranteApenasNomeModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 
 @Component
@@ -21,6 +22,9 @@ public class RestauranteApenasNomeModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public RestauranteApenasNomeModelAssembler() {
         super(RestauranteController.class, RestauranteApenasNomeModel.class);
     }
@@ -32,14 +36,21 @@ public class RestauranteApenasNomeModelAssembler
         
         modelMapper.map(restaurante, restauranteModel);
         
-        restauranteModel.add(lemosLinks.linkToRestaurantes("restaurantes"));
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            restauranteModel.add(lemosLinks.linkToRestaurantes("restaurantes"));
+        }
         
         return restauranteModel;
     }
-    
+
     @Override
     public CollectionModel<RestauranteApenasNomeModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities)
-                .add(lemosLinks.linkToRestaurantes());
-    }   
+        CollectionModel<RestauranteApenasNomeModel> collectionModel = super.toCollectionModel(entities);
+        
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            collectionModel.add(lemosLinks.linkToRestaurantes());
+        }
+                
+        return collectionModel;
+    }
 }

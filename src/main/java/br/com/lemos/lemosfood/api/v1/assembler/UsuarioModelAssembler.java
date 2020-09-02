@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.UsuarioController;
 import br.com.lemos.lemosfood.api.v1.model.UsuarioModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Usuario;
 
 @Component
@@ -20,6 +21,9 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public UsuarioModelAssembler() {
         super(UsuarioController.class, UsuarioModel.class);
     }
@@ -29,9 +33,11 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
         UsuarioModel usuarioModel = createModelWithId(usuario.getId(), usuario);
         modelMapper.map(usuario, usuarioModel);
         
-        usuarioModel.add(lemosLinks.linkToUsuarios("usuarios"));
-        
-        usuarioModel.add(lemosLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        if (lemosSecurity.podeConsultarUsuariosGruposPermissoes()) {
+        	usuarioModel.add(lemosLinks.linkToUsuarios("usuarios"));
+        	
+        	usuarioModel.add(lemosLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        }
         
         return usuarioModel;
     }

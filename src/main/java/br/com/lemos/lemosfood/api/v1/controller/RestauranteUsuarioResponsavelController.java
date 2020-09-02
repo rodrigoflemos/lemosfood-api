@@ -18,6 +18,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.UsuarioModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.UsuarioModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import br.com.lemos.lemosfood.core.security.CheckSecurity;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
@@ -35,7 +36,10 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private LemosLinks lemosLinks;
     
-    @CheckSecurity.Restaurantes.PodeConsultar
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Override
     @GetMapping
     public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
@@ -43,14 +47,18 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         
         CollectionModel<UsuarioModel> usuariosModel = usuarioModelAssembler
                 .toCollectionModel(restaurante.getResponsaveis())
-                    .removeLinks()
-                    .add(lemosLinks.linkToRestauranteResponsaveis(restauranteId))
-                    .add(lemosLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
+                .removeLinks();
+        
+        usuariosModel.add(lemosLinks.linkToRestauranteResponsaveis(restauranteId));
+        
+        if (lemosSecurity.podeGerenciarCadastroRestaurantes()) {
+            usuariosModel.add(lemosLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
 
-        usuariosModel.getContent().stream().forEach(usuarioModel -> {
-            usuarioModel.add(lemosLinks.linkToRestauranteResponsavelDesassociacao(
-                    restauranteId, usuarioModel.getId(), "desassociar"));
-        });
+            usuariosModel.getContent().stream().forEach(usuarioModel -> {
+                usuarioModel.add(lemosLinks.linkToRestauranteResponsavelDesassociacao(
+                        restauranteId, usuarioModel.getId(), "desassociar"));
+            });
+        }
         
         return usuariosModel;
     }

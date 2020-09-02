@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.RestauranteProdutoFotoController;
 import br.com.lemos.lemosfood.api.v1.model.FotoProdutoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.FotoProduto;
 
 @Component
@@ -20,6 +21,9 @@ public class FotoProdutoModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public FotoProdutoModelAssembler() {
         super(RestauranteProdutoFotoController.class, FotoProdutoModel.class);
     }
@@ -28,14 +32,17 @@ public class FotoProdutoModelAssembler
     public FotoProdutoModel toModel(FotoProduto foto) {
         FotoProdutoModel fotoProdutoModel = modelMapper.map(foto, FotoProdutoModel.class);
         
-        fotoProdutoModel.add(lemosLinks.linkToFotoProduto(
-                foto.getRestauranteId(), foto.getProduto().getId()));
-        
-        fotoProdutoModel.add(lemosLinks.linkToProduto(
-                foto.getRestauranteId(), foto.getProduto().getId(), "produto"));
+        // Quem pode consultar restaurantes, também pode consultar os produtos e fotos
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            fotoProdutoModel.add(lemosLinks.linkToFotoProduto(
+                    foto.getRestauranteId(), foto.getProduto().getId()));
+            
+            fotoProdutoModel.add(lemosLinks.linkToProduto(
+                    foto.getRestauranteId(), foto.getProduto().getId(), "produto"));
+        }
         
         return fotoProdutoModel;
-    }   
+    }
 }
 
 

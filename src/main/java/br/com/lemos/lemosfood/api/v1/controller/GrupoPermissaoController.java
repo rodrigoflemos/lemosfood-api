@@ -18,6 +18,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.PermissaoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.PermissaoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.GrupoPermissaoControllerOpenApi;
 import br.com.lemos.lemosfood.core.security.CheckSecurity;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Grupo;
 import br.com.lemos.lemosfood.domain.service.CadastroGrupoService;
 
@@ -34,25 +35,32 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerOpenApi
 	@Autowired
 	private LemosLinks lemosLinks;
 	
-	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
-	@Override
-	@GetMapping
-	public CollectionModel<PermissaoModel> listar(@PathVariable Long grupoId) {
-	    Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
-	    
-	    CollectionModel<PermissaoModel> permissoesModel 
-	        = permissaoModelAssembler.toCollectionModel(grupo.getPermissoes())
-	            .removeLinks()
-	            .add(lemosLinks.linkToGrupoPermissoes(grupoId))
-	            .add(lemosLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
-	    
-	    permissoesModel.getContent().forEach(permissaoModel -> {
-	        permissaoModel.add(lemosLinks.linkToGrupoPermissaoDesassociacao(
-	                grupoId, permissaoModel.getId(), "desassociar"));
-	    });
-	    
-	    return permissoesModel;
-	}    
+    @Autowired
+    private LemosSecurity lemosSecurity;
+	
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+    @Override
+    @GetMapping
+    public CollectionModel<PermissaoModel> listar(@PathVariable Long grupoId) {
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+        
+        CollectionModel<PermissaoModel> permissoesModel 
+            = permissaoModelAssembler.toCollectionModel(grupo.getPermissoes())
+                .removeLinks();
+        
+        permissoesModel.add(lemosLinks.linkToGrupoPermissoes(grupoId));
+        
+        if (lemosSecurity.podeEditarUsuariosGruposPermissoes()) {
+            permissoesModel.add(lemosLinks.linkToGrupoPermissaoAssociacao(grupoId, "associar"));
+        
+            permissoesModel.getContent().forEach(permissaoModel -> {
+                permissaoModel.add(lemosLinks.linkToGrupoPermissaoDesassociacao(
+                        grupoId, permissaoModel.getId(), "desassociar"));
+            });
+        }
+        
+        return permissoesModel;
+    }    
 	
 	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
 	@Override

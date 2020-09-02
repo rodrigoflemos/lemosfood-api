@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.model.PermissaoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Permissao;
 
 @Component
@@ -19,6 +20,9 @@ public class PermissaoModelAssembler
     
     @Autowired
     private LemosLinks lemosLinks;
+    
+    @Autowired
+    private LemosSecurity lemosSecurity;
 
     @Override
     public PermissaoModel toModel(Permissao permissao) {
@@ -28,7 +32,13 @@ public class PermissaoModelAssembler
     
     @Override
     public CollectionModel<PermissaoModel> toCollectionModel(Iterable<? extends Permissao> entities) {
-        return RepresentationModelAssembler.super.toCollectionModel(entities)
-                .add(lemosLinks.linkToPermissoes());
-    }   
+        CollectionModel<PermissaoModel> collectionModel 
+            = RepresentationModelAssembler.super.toCollectionModel(entities);
+
+        if (lemosSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(lemosLinks.linkToPermissoes());
+        }
+        
+        return collectionModel;            
+    }
 }

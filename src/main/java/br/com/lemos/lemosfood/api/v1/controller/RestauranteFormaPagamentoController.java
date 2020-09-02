@@ -18,6 +18,7 @@ import br.com.lemos.lemosfood.api.v1.assembler.FormaPagamentoModelAssembler;
 import br.com.lemos.lemosfood.api.v1.model.FormaPagamentoModel;
 import br.com.lemos.lemosfood.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
 import br.com.lemos.lemosfood.core.security.CheckSecurity;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 import br.com.lemos.lemosfood.domain.service.CadastroRestauranteService;
 
@@ -35,22 +36,29 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
 	@Autowired
 	private LemosLinks lemosLinks;
 	
+	@Autowired
+	private LemosSecurity lemosSecurity;
+	
 	@CheckSecurity.Restaurantes.PodeConsultar
 	@Override
 	@GetMapping
 	public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
 	    Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 	    
-	    CollectionModel<FormaPagamentoModel> formasPagamentoModel = 
-	    		formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
-	            .removeLinks()
-	            .add(lemosLinks.linkToRestauranteFormasPagamento(restauranteId))
-	    		.add(lemosLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+	    CollectionModel<FormaPagamentoModel> formasPagamentoModel 
+	        = formaPagamentoModelAssembler.toCollectionModel(restaurante.getFormasPagamento())
+	            .removeLinks();
 	    
-	    formasPagamentoModel.getContent().forEach(formaPagamentoModel -> 
-	    	formaPagamentoModel.add(lemosLinks.linkToRestauranteFormaPagamentoDesassociacao(
-	    			restauranteId, formaPagamentoModel.getId(), "desassociar"))
-	    );
+	    formasPagamentoModel.add(lemosLinks.linkToRestauranteFormasPagamento(restauranteId));
+
+	    if (lemosSecurity.podeGerenciarFuncionamentoRestaurantes(restauranteId)) {
+	        formasPagamentoModel.add(lemosLinks.linkToRestauranteFormaPagamentoAssociacao(restauranteId, "associar"));
+	        
+	        formasPagamentoModel.getContent().forEach(formaPagamentoModel -> {
+	            formaPagamentoModel.add(lemosLinks.linkToRestauranteFormaPagamentoDesassociacao(
+	                    restauranteId, formaPagamentoModel.getId(), "desassociar"));
+	        });
+	    }
 	    
 	    return formasPagamentoModel;
 	}

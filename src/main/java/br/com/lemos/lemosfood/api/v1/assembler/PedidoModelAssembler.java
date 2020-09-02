@@ -33,39 +33,54 @@ public class PedidoModelAssembler
         PedidoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModel);
         
-        pedidoModel.add(lemosLinks.linkToPedidos("pedidos"));
-        
-        if(lemosSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
-        	
-        	if (pedido.podeSerConfirmado()) {
-        		pedidoModel.add(lemosLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));			
-        	}
-        	
-        	if (pedido.podeSerCancelado()) {
-        		pedidoModel.add(lemosLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
-        	}
-        	
-        	if (pedido.podeSerEntregue()) {
-        		pedidoModel.add(lemosLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
-        	}
+        // Não usei o método lemosSecurity.podePesquisarPedidos(clienteId, restauranteId) aqui,
+        // porque na geração do link, não temos o id do cliente e do restaurante, 
+        // então precisamos saber apenas se a requisição está autenticada e tem o escopo de leitura
+        if (lemosSecurity.podePesquisarPedidos()) {
+            pedidoModel.add(lemosLinks.linkToPedidos("pedidos"));
         }
         
-        pedidoModel.getRestaurante().add(
-        		lemosLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        if (lemosSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+            if (pedido.podeSerConfirmado()) {
+                pedidoModel.add(lemosLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+            }
+            
+            if (pedido.podeSerCancelado()) {
+                pedidoModel.add(lemosLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+            }
+            
+            if (pedido.podeSerEntregue()) {
+                pedidoModel.add(lemosLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+            }
+        }
         
-        pedidoModel.getCliente().add(
-        		lemosLinks.linkToUsuario(pedido.getCliente().getId()));
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            pedidoModel.getRestaurante().add(
+            		lemosLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        }
         
-        pedidoModel.getFormaPagamento().add(
-        		lemosLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        if (lemosSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            pedidoModel.getCliente().add(
+            		lemosLinks.linkToUsuario(pedido.getCliente().getId()));
+        }
         
-        pedidoModel.getEnderecoEntrega().getCidade().add(
-        		lemosLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        if (lemosSecurity.podeConsultarFormasPagamento()) {
+            pedidoModel.getFormaPagamento().add(
+            		lemosLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        }
         
-        pedidoModel.getItens().forEach(item -> {
-            item.add(lemosLinks.linkToProduto(
-                    pedidoModel.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+        if (lemosSecurity.podeConsultarCidades()) {
+            pedidoModel.getEnderecoEntrega().getCidade().add(
+            		lemosLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        }
+        
+        // Quem pode consultar restaurantes, também pode consultar os produtos dos restaurantes
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            pedidoModel.getItens().forEach(item -> {
+                item.add(lemosLinks.linkToProduto(
+                        pedidoModel.getRestaurante().getId(), item.getProdutoId(), "produto"));
+            });
+        }
         
         return pedidoModel;
     }

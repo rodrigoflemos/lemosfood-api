@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.RestauranteController;
 import br.com.lemos.lemosfood.api.v1.model.RestauranteBasicoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Restaurante;
 
 @Component
@@ -21,6 +22,9 @@ public class RestauranteBasicoModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public RestauranteBasicoModelAssembler() {
         super(RestauranteController.class, RestauranteBasicoModel.class);
     }
@@ -32,17 +36,26 @@ public class RestauranteBasicoModelAssembler
         
         modelMapper.map(restaurante, restauranteModel);
         
-        restauranteModel.add(lemosLinks.linkToRestaurantes("restaurantes"));
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            restauranteModel.add(lemosLinks.linkToRestaurantes("restaurantes"));
+        }
         
-        restauranteModel.getCozinha().add(
-                lemosLinks.linkToCozinha(restaurante.getCozinha().getId()));
+        if (lemosSecurity.podeConsultarCozinhas()) {
+            restauranteModel.getCozinha().add(
+                    lemosLinks.linkToCozinha(restaurante.getCozinha().getId()));
+        }
         
         return restauranteModel;
     }
-    
+
     @Override
     public CollectionModel<RestauranteBasicoModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities)
-                .add(lemosLinks.linkToRestaurantes());
-    }   
+        CollectionModel<RestauranteBasicoModel> collectionModel = super.toCollectionModel(entities);
+        
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+            collectionModel.add(lemosLinks.linkToRestaurantes());
+        }
+                
+        return collectionModel;
+    }
 }

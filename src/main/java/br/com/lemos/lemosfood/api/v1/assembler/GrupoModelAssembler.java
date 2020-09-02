@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.GrupoController;
 import br.com.lemos.lemosfood.api.v1.model.GrupoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Grupo;
 
 @Component
@@ -21,6 +22,9 @@ public class GrupoModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public GrupoModelAssembler() {
         super(GrupoController.class, GrupoModel.class);
     }
@@ -30,16 +34,23 @@ public class GrupoModelAssembler
         GrupoModel grupoModel = createModelWithId(grupo.getId(), grupo);
         modelMapper.map(grupo, grupoModel);
         
-        grupoModel.add(lemosLinks.linkToGrupos("grupos"));
-        
-        grupoModel.add(lemosLinks.linkToGrupoPermissoes(grupo.getId(), "permissoes"));
+        if (lemosSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            grupoModel.add(lemosLinks.linkToGrupos("grupos"));
+            
+            grupoModel.add(lemosLinks.linkToGrupoPermissoes(grupo.getId(), "permissoes"));
+        }
         
         return grupoModel;
     }
-    
+
     @Override
     public CollectionModel<GrupoModel> toCollectionModel(Iterable<? extends Grupo> entities) {
-        return super.toCollectionModel(entities)
-                .add(lemosLinks.linkToGrupos());
-    }            
+        CollectionModel<GrupoModel> collectionModel = super.toCollectionModel(entities);
+        
+        if (lemosSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(lemosLinks.linkToGrupos());
+        }
+        
+        return collectionModel;
+    }
 }

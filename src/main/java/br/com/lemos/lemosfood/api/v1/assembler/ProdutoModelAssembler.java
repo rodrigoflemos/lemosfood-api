@@ -1,3 +1,4 @@
+
 package br.com.lemos.lemosfood.api.v1.assembler;
 
 import org.modelmapper.ModelMapper;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.lemos.lemosfood.api.v1.LemosLinks;
 import br.com.lemos.lemosfood.api.v1.controller.RestauranteProdutoController;
 import br.com.lemos.lemosfood.api.v1.model.ProdutoModel;
+import br.com.lemos.lemosfood.core.security.LemosSecurity;
 import br.com.lemos.lemosfood.domain.model.Produto;
 
 @Component
@@ -20,6 +22,9 @@ public class ProdutoModelAssembler
     @Autowired
     private LemosLinks lemosLinks;
     
+    @Autowired
+    private LemosSecurity lemosSecurity;
+    
     public ProdutoModelAssembler() {
         super(RestauranteProdutoController.class, ProdutoModel.class);
     }
@@ -31,11 +36,12 @@ public class ProdutoModelAssembler
         
         modelMapper.map(produto, produtoModel);
         
-        produtoModel.add(lemosLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
+        if (lemosSecurity.podeConsultarRestaurantes()) {
+        	produtoModel.add(lemosLinks.linkToProdutos(produto.getRestaurante().getId(), "produtos"));
 
-        produtoModel.add(lemosLinks.linkToFotoProduto(
-                produto.getRestaurante().getId(), produto.getId(), "foto"));
-        
+        	produtoModel.add(lemosLinks.linkToFotoProduto(
+        			produto.getRestaurante().getId(), produto.getId(), "foto"));
+        }        
         return produtoModel;
-    }       
-} 
+    }
+}
