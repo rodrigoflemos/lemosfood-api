@@ -61,13 +61,13 @@
 	<form class="form-signin" th:action="@{/login}" method="post">
 		<h1 class="h3 mb-3 font-weight-normal">Acesso à AlgaFood</h1>
 
-		<p class="alert alert-danger">
+		<p class="alert alert-danger" th:if="${bools.isTrue(param.error)}">
 			O e-mail ou senha não confere
 		</p>
 
-		<input type="email" class="form-control" placeholder="Seu e-mail" required autofocus>
+		<input type="email" name="username" class="form-control" placeholder="Seu e-mail" required autofocus>
 		
-		<input type="password" class="form-control" placeholder="Sua senha" required>
+		<input type="password" name="password" class="form-control" placeholder="Sua senha" required>
 
 		<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 
