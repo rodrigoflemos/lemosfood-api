@@ -5,7 +5,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 import br.com.lemos.lemosfood.LemosfoodApiApplication;
-import br.com.lemos.lemosfood.domain.model.Cozinha;
 import br.com.lemos.lemosfood.domain.repository.CozinhaRepository;
 
 public class ExclusaoCozinhaMain {
@@ -17,9 +16,6 @@ public class ExclusaoCozinhaMain {
 		
 		CozinhaRepository cozinhaRepo = applicationContext.getBean(CozinhaRepository.class);
 		
-		Cozinha cozinha = new Cozinha();
-		cozinha.setId(1L);
-		
-		cozinhaRepo.remover(cozinha);
+		cozinhaRepo.deleteById(1L);
 	}
 }
